@@ -1,6 +1,6 @@
 # Masjid QR Donation System | Digital Payment Infrastructure
 
-**Built:** December 2024  
+**Built:** December 2025  
 **Status:** Deployed at 3+ mosques in Pakistan  
 **Timeline:** Built and deployed in under 1 week
 
