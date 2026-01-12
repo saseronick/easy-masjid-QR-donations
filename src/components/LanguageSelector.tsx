@@ -1,5 +1,4 @@
 import React from 'react';
-import { Globe } from 'lucide-react';
 import { Language } from '../types';
 
 interface LanguageSelectorProps {
@@ -19,10 +18,11 @@ const languages = [
 
 export default function LanguageSelector({ currentLanguage, onLanguageChange }: LanguageSelectorProps) {
   return (
-    <div className="flex items-center justify-center gap-2 mb-6" role="group" aria-labelledby="language-selector-label">
-      <span id="language-selector-label" className="sr-only">Select Language</span>
-      <Globe className="w-5 h-5 text-green-800" />
-      <div className="flex gap-1 bg-gray-100 rounded-lg p-1 border-2 border-gray-300">
+    <div className="mb-8" role="group" aria-labelledby="language-selector-label">
+      <h2 id="language-selector-label" className="text-3xl font-bold text-black mb-6 text-center">
+        Language / زبان
+      </h2>
+      <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
         {languages.map((lang) => (
           <button
             key={lang.code}
@@ -31,10 +31,10 @@ export default function LanguageSelector({ currentLanguage, onLanguageChange }: 
             aria-label={`Switch to ${lang.name}`}
             role="radio"
             aria-describedby={`${lang.code}-description`}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
+            className={`min-h-[80px] px-8 py-6 rounded-2xl text-2xl font-bold transition-all border-4 ${
               currentLanguage === lang.code
-                ? 'bg-green-800 text-white shadow-lg border-2 border-green-900 focus:ring-4 focus:ring-green-300'
-                : 'text-gray-900 bg-white hover:bg-green-100 border-2 border-transparent focus:ring-4 focus:ring-green-300'
+                ? 'bg-black text-white border-black shadow-xl'
+                : 'text-black bg-white border-black hover:bg-gray-100 active:bg-gray-200'
             }`}
           >
             {lang.nativeName}

@@ -316,18 +316,6 @@ export const translations: Translations = {
     ps: 'د شریکولو اختیار وټاکئ:',
     sd: 'شيئرنگ جو اختيار چونڊيو:'
   },
-  copyLink: {
-    en: 'Copy Payment Link',
-    ur: 'پیمنٹ لنک کاپی کریں',
-    hi: 'भुगतान लिंक कॉपी करें',
-    ar: 'نسخ رابط الدفع'
-  },
-  shareImage: {
-    en: 'Share QR Image',
-    ur: 'کیو آر تصویر شیئر کریں',
-    hi: 'QR छवि साझा करें',
-    ar: 'مشاركة صورة QR'
-  },
   donateTo: {
     en: 'Donate to',
     ur: 'عطیہ دیں',
