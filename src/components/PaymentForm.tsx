@@ -45,18 +45,24 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
 
   return (
     <div className={`max-w-3xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
+      <div className="bg-blue-50 border-l-4 border-blue-600 p-6 mb-8 rounded-lg">
+        <p className="text-lg text-blue-900 font-medium leading-relaxed">
+          Most donations come from cash. This QR code adds a digital option for people who prefer mobile payments.
+        </p>
+      </div>
+
       <VoiceButton
         text={instructions}
         language={language}
       />
 
-      <form onSubmit={handleSubmit} className="space-y-10 mt-10" noValidate>
-        <div>
+      <form onSubmit={handleSubmit} className="space-y-8 mt-8" noValidate>
+        <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
           <fieldset className="border-0 p-0 m-0">
-            <legend className="block text-3xl font-bold text-black mb-8">
-              Step 1: Choose Payment App
+            <legend className="block text-2xl font-bold text-gray-900 mb-6">
+              Step 1: Which app do people use to send you money?
             </legend>
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-4">
               {paymentMethods.map((pm) => {
                 const Icon = pm.icon;
                 return (
@@ -67,14 +73,14 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
                     aria-pressed={method === pm.id}
                     role="radio"
                     aria-checked={method === pm.id}
-                    className={`min-h-[100px] p-8 rounded-2xl border-4 transition-all flex items-center gap-6 text-left ${
+                    className={`min-h-[80px] p-6 rounded-xl border-3 transition-all flex items-center gap-4 text-left ${
                       method === pm.id
-                        ? 'border-black bg-black text-white shadow-xl'
-                        : 'border-black bg-white text-black hover:bg-gray-100 active:bg-gray-200'
+                        ? 'border-green-700 bg-green-700 text-white shadow-lg'
+                        : 'border-gray-300 bg-white text-gray-900 hover:border-green-600 hover:bg-green-50'
                     }`}
                   >
-                    <Icon className="w-16 h-16 flex-shrink-0" aria-hidden="true" />
-                    <span className="text-3xl font-bold">{pm.label}</span>
+                    <Icon className="w-12 h-12 flex-shrink-0" aria-hidden="true" />
+                    <span className="text-2xl font-bold">{pm.label}</span>
                   </button>
                 );
               })}
@@ -82,12 +88,12 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
           </fieldset>
         </div>
 
-        <div>
-          <label htmlFor="payment-identifier" className="block text-3xl font-bold text-black mb-8">
-            Step 2: Phone Number
+        <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
+          <label htmlFor="payment-identifier" className="block text-2xl font-bold text-gray-900 mb-4">
+            Step 2: Your mobile number
           </label>
-          <p className="text-2xl text-black mb-6 leading-relaxed">
-            {method === 'jazzcash' ? 'Your JazzCash number' : 'Your Easypaisa number'}
+          <p className="text-lg text-gray-700 mb-4 leading-relaxed">
+            {method === 'jazzcash' ? 'Your JazzCash number (usually your personal mobile)' : 'Your Easypaisa number (usually your personal mobile)'}
           </p>
           <input
             id="payment-identifier"
@@ -98,19 +104,17 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             aria-required="true"
             aria-invalid={!identifier.trim() && error ? 'true' : 'false'}
             placeholder="03001234567"
-            className={`w-full px-8 py-6 text-3xl border-4 border-black rounded-2xl focus:outline-none focus:ring-8 focus:ring-gray-300 ${
-              isRTL ? 'text-right' : 'text-left'
-            }`}
+            className="w-full px-6 py-5 text-2xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors"
             dir="ltr"
           />
         </div>
 
-        <div>
-          <label htmlFor="organization-name" className="block text-3xl font-bold text-black mb-8">
-            Step 3: Mosque Name
+        <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
+          <label htmlFor="organization-name" className="block text-2xl font-bold text-gray-900 mb-4">
+            Step 3: Masjid name
           </label>
-          <p className="text-2xl text-black mb-6 leading-relaxed">
-            What is your mosque or community called?
+          <p className="text-lg text-gray-700 mb-4 leading-relaxed">
+            This will appear on the QR code so people know where they're donating
           </p>
           <input
             id="organization-name"
@@ -121,7 +125,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             aria-required="true"
             aria-invalid={!name.trim() && error ? 'true' : 'false'}
             placeholder="Masjid Al-Noor"
-            className={`w-full px-8 py-6 text-3xl border-4 border-black rounded-2xl focus:outline-none focus:ring-8 focus:ring-gray-300 ${
+            className={`w-full px-6 py-5 text-2xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors ${
               isRTL ? 'text-right' : 'text-left'
             }`}
             dir={isRTL ? 'rtl' : 'ltr'}
@@ -129,16 +133,16 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
         </div>
 
         {error && (
-          <div className="bg-white border-4 border-black rounded-2xl p-8" role="alert" aria-live="polite" aria-atomic="true">
-            <p className="text-black text-2xl font-bold text-center">{error}</p>
+          <div className="bg-red-50 border-3 border-red-600 rounded-xl p-6" role="alert" aria-live="polite" aria-atomic="true">
+            <p className="text-red-900 text-xl font-bold text-center">{error}</p>
           </div>
         )}
 
         <button
           type="submit"
-          className="w-full min-h-[100px] bg-black text-white py-8 px-8 rounded-2xl text-3xl font-bold hover:bg-gray-800 focus:bg-gray-800 focus:outline-none focus:ring-8 focus:ring-gray-400 transition-colors shadow-xl"
+          className="w-full min-h-[80px] bg-green-700 text-white py-6 px-8 rounded-xl text-2xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg"
         >
-          CREATE QR CODE
+          Create QR Code for Printing
         </button>
       </form>
     </div>

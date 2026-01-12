@@ -21,17 +21,20 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-white ${isRTL ? 'rtl' : 'ltr'}`} lang={language}>
+    <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`} lang={language}>
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {/* Header */}
-        <header className="text-center mb-12" role="banner">
-          <h1 className="text-5xl font-bold text-black mb-8 leading-tight" id="main-heading">
+        <header className="text-center mb-10" role="banner">
+          <h1 className="text-4xl font-bold text-green-900 mb-4 leading-tight" id="main-heading">
             {t('title')}
           </h1>
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+            {t('valueProposition')}
+          </p>
         </header>
 
         {/* Language Selector */}
-        <nav aria-label="Language Selection" role="navigation" className="mb-12">
+        <nav aria-label="Language Selection" role="navigation" className="mb-10">
           <LanguageSelector
             currentLanguage={language}
             onLanguageChange={setLanguage}

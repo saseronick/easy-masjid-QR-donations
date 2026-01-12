@@ -52,18 +52,18 @@ export default function VoiceButton({ text, language }: VoiceButtonProps) {
   return (
     <button
       onClick={speaking ? stop : speak}
-      className="min-h-[80px] w-full px-8 py-6 rounded-2xl text-2xl font-bold border-4 border-black bg-black text-white hover:bg-gray-800 active:bg-gray-900 flex items-center justify-center gap-4 transition-all"
+      className="min-h-[70px] w-full px-6 py-5 rounded-xl text-xl font-bold border-3 border-blue-600 bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 flex items-center justify-center gap-3 transition-all shadow-md"
       aria-label={speaking ? 'Stop speaking' : 'Read aloud'}
       type="button"
     >
       {speaking ? (
         <>
-          <VolumeX className="w-10 h-10" aria-hidden="true" />
+          <VolumeX className="w-8 h-8" aria-hidden="true" />
           <span>STOP</span>
         </>
       ) : (
         <>
-          <Volume2 className="w-10 h-10" aria-hidden="true" />
+          <Volume2 className="w-8 h-8" aria-hidden="true" />
           <span>LISTEN / سنیں</span>
         </>
       )}

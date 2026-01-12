@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, Share2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { PaymentInfo, Language } from '../types';
 import { translations } from '../data/translations';
@@ -13,7 +13,8 @@ interface QRDisplayProps {
 
 export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayProps) {
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
-  const [qrWithTextDataUrl, setQrWithTextDataUrl] = useState<string>('');
+  const [qrPrintDataUrl, setQrPrintDataUrl] = useState<string>('');
+  const [showShareTip, setShowShareTip] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
@@ -36,8 +37,8 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
         const paymentUrl = generatePaymentUrl();
 
         const dataUrl = await QRCode.toDataURL(paymentUrl, {
-          width: 400,
-          margin: 2,
+          width: 350,
+          margin: 3,
           color: {
             dark: '#000000',
             light: '#FFFFFF'
@@ -45,7 +46,7 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
         });
         setQrDataUrl(dataUrl);
 
-        await generateQRWithText(paymentUrl);
+        await generatePrintQR(paymentUrl);
       } catch (error) {
         console.error('Error generating QR code:', error);
       }
@@ -54,32 +55,50 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
     generateQRs();
   }, [paymentInfo]);
 
-  const generateQRWithText = async (paymentUrl: string) => {
+  const generatePrintQR = async (paymentUrl: string) => {
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    canvas.width = 600;
-    canvas.height = 700;
+    canvas.width = 800;
+    canvas.height = 1100;
 
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const donateText = `${paymentInfo.name}`;
+    const titleText = paymentInfo.name;
     ctx.fillStyle = '#000000';
-    ctx.font = 'bold 40px Arial, sans-serif';
+    ctx.font = 'bold 48px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(donateText, canvas.width / 2, 60);
+
+    const words = titleText.split(' ');
+    let line = '';
+    let y = 80;
+    const maxWidth = 700;
+
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+
+      if (metrics.width > maxWidth && n > 0) {
+        ctx.fillText(line, canvas.width / 2, y);
+        line = words[n] + ' ';
+        y += 55;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, canvas.width / 2, y);
 
     ctx.fillStyle = '#000000';
-    ctx.fillRect(canvas.width / 2 - 60, 80, 120, 4);
+    ctx.fillRect(150, y + 20, 500, 3);
 
     try {
       const qrCanvas = document.createElement('canvas');
       await QRCode.toCanvas(qrCanvas, paymentUrl, {
-        width: 400,
+        width: 500,
         margin: 2,
         color: {
           dark: '#000000',
@@ -87,84 +106,193 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
         }
       });
 
-      const qrX = (canvas.width - 400) / 2;
-      const qrY = 120;
+      const qrX = (canvas.width - 500) / 2;
+      const qrY = y + 60;
       ctx.drawImage(qrCanvas, qrX, qrY);
 
       ctx.fillStyle = '#000000';
-      ctx.font = 'bold 32px Arial, sans-serif';
-      ctx.fillText('SCAN TO PAY', canvas.width / 2, qrY + 480);
+      ctx.font = 'bold 36px Arial, sans-serif';
+      ctx.fillText('Scan with Camera', canvas.width / 2, qrY + 560);
+      ctx.font = '28px Arial, sans-serif';
+      ctx.fillText('کیمرہ سے اسکین کریں', canvas.width / 2, qrY + 600);
+
+      ctx.fillStyle = '#666666';
+      ctx.font = '24px Arial, sans-serif';
+      const method = paymentInfo.method === 'jazzcash' ? 'JazzCash' : 'Easypaisa';
+      ctx.fillText(`Opens ${method} app automatically`, canvas.width / 2, qrY + 660);
+
+      ctx.strokeStyle = '#CCCCCC';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(100, qrY + 700);
+      ctx.lineTo(700, qrY + 700);
+      ctx.stroke();
+
+      ctx.fillStyle = '#666666';
+      ctx.font = 'bold 22px Arial, sans-serif';
+      ctx.fillText('Cash donations also welcome', canvas.width / 2, qrY + 750);
+      ctx.font = '22px Arial, sans-serif';
+      ctx.fillText('نقد عطیات بھی قبول ہیں', canvas.width / 2, qrY + 785);
 
       const dataUrl = canvas.toDataURL('image/png');
-      setQrWithTextDataUrl(dataUrl);
+      setQrPrintDataUrl(dataUrl);
 
     } catch (error) {
-      console.error('Error generating QR with text:', error);
+      console.error('Error generating print QR:', error);
     }
   };
 
-  const downloadQR = () => {
+  const downloadForPrint = () => {
     const link = document.createElement('a');
-    link.download = `${paymentInfo.name}-qr-code.png`;
-    link.href = qrWithTextDataUrl || qrDataUrl;
+    link.download = `${paymentInfo.name}-qr-code-print.png`;
+    link.href = qrPrintDataUrl || qrDataUrl;
     link.click();
   };
 
-  const instruction = `Scan this code with your phone camera. It will open ${paymentInfo.method === 'jazzcash' ? 'JazzCash' : 'Easypaisa'} app automatically. Then complete the payment.`;
+  const shareDigital = async () => {
+    if (navigator.share) {
+      try {
+        const response = await fetch(qrPrintDataUrl);
+        const blob = await response.blob();
+        const file = new File([blob], `${paymentInfo.name}-qr-code.png`, { type: 'image/png' });
+
+        await navigator.share({
+          title: `Donate to ${paymentInfo.name}`,
+          files: [file]
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+        setShowShareTip(true);
+      }
+    } else {
+      setShowShareTip(true);
+    }
+  };
+
+  const instruction = `Your QR code is ready. Download it and print it on paper. Put it on your donation box. People can scan it with their phone camera to donate using ${paymentInfo.method === 'jazzcash' ? 'JazzCash' : 'Easypaisa'}. Cash donations are still the main way people donate.`;
 
   return (
-    <div className={`max-w-3xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
       <button
         onClick={onBack}
-        className="min-h-[80px] w-full mb-10 px-8 py-6 rounded-2xl text-2xl font-bold border-4 border-black bg-white text-black hover:bg-gray-100 active:bg-gray-200 flex items-center justify-center gap-4 transition-all"
+        className="min-h-[60px] px-6 py-4 rounded-xl text-lg font-bold border-3 border-gray-400 bg-white text-gray-800 hover:bg-gray-100 active:bg-gray-200 flex items-center gap-3 transition-all mb-8 shadow-sm"
         aria-label="Go back"
       >
-        <ArrowLeft className={`w-10 h-10 ${isRTL ? 'rotate-180' : ''}`} aria-hidden="true" />
-        <span>BACK</span>
+        <ArrowLeft className={`w-6 h-6 ${isRTL ? 'rotate-180' : ''}`} aria-hidden="true" />
+        <span>Make Another QR Code</span>
       </button>
+
+      <div className="bg-green-50 border-l-4 border-green-600 p-6 mb-8 rounded-lg">
+        <h2 className="text-2xl font-bold text-green-900 mb-3">
+          Your QR Code is Ready!
+        </h2>
+        <p className="text-lg text-green-800 leading-relaxed">
+          Download and print this QR code. Put it on or near your donation box. People with mobile phones can scan it to donate digitally while others can continue donating cash as usual.
+        </p>
+      </div>
 
       <VoiceButton
         text={instruction}
         language={language}
       />
 
-      <div className="bg-white rounded-3xl border-8 border-black p-12 text-center mt-10" role="main">
-        <div className="mb-10">
-          <h2 className="text-4xl font-bold text-black mb-6 leading-tight">
+      <div className="bg-white rounded-2xl p-10 shadow-lg border border-gray-200 mt-8">
+        <div className="text-center mb-8">
+          <h3 className="text-3xl font-bold text-gray-900 mb-3 leading-tight">
             {paymentInfo.name}
-          </h2>
-          <p className="text-3xl font-bold text-black">
-            SCAN TO PAY
+          </h3>
+          <p className="text-xl text-gray-700">
+            Digital Donation QR Code
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-2xl border-4 border-black mb-10 inline-block">
+        <div className="bg-gray-50 p-8 rounded-xl border-2 border-gray-200 mb-8">
           {qrDataUrl && (
             <img
               src={qrDataUrl}
               alt={`QR Code for ${paymentInfo.name}`}
-              className="w-full max-w-md mx-auto"
+              className="w-full max-w-sm mx-auto"
               role="img"
             />
           )}
         </div>
 
-        <div className="bg-white border-4 border-black rounded-2xl p-8 mb-10">
-          <p className="text-2xl text-black font-bold leading-relaxed">
-            Point your camera at this code. Your payment app will open automatically.
-          </p>
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+          <h4 className="text-xl font-bold text-blue-900 mb-3">
+            How it works:
+          </h4>
+          <ol className="space-y-3 text-lg text-blue-900">
+            <li className="flex gap-3">
+              <span className="font-bold flex-shrink-0">1.</span>
+              <span>Download and print this QR code (black & white printing works fine)</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-bold flex-shrink-0">2.</span>
+              <span>Laminate or put in plastic sleeve for durability</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-bold flex-shrink-0">3.</span>
+              <span>Attach to or near your donation box where people can see it</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-bold flex-shrink-0">4.</span>
+              <span>People scan with their phone camera - the payment app opens automatically</span>
+            </li>
+          </ol>
         </div>
 
-        <button
-          onClick={downloadQR}
-          className="w-full min-h-[100px] bg-black text-white py-8 px-8 rounded-2xl text-3xl font-bold hover:bg-gray-800 focus:bg-gray-800 focus:outline-none focus:ring-8 focus:ring-gray-400 transition-colors shadow-xl flex items-center justify-center gap-6"
-        >
-          <Download className="w-12 h-12" aria-hidden="true" />
-          DOWNLOAD QR CODE
-        </button>
+        <div className="grid grid-cols-1 gap-4">
+          <button
+            onClick={downloadForPrint}
+            className="min-h-[80px] bg-green-700 text-white py-6 px-8 rounded-xl text-2xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg flex items-center justify-center gap-4"
+          >
+            <Download className="w-10 h-10" aria-hidden="true" />
+            Download QR Code to Print
+          </button>
+
+          <button
+            onClick={shareDigital}
+            className="min-h-[70px] bg-white text-gray-800 py-5 px-6 rounded-xl text-xl font-bold border-3 border-gray-300 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors flex items-center justify-center gap-3"
+          >
+            <Share2 className="w-8 h-8" aria-hidden="true" />
+            Share Digital Copy (WhatsApp, etc.)
+          </button>
+        </div>
+
+        {showShareTip && (
+          <div className="mt-6 bg-yellow-50 border border-yellow-300 rounded-lg p-5">
+            <p className="text-yellow-900 text-base">
+              <strong>Tip:</strong> Download the QR code first, then share the image file through WhatsApp, Facebook, or any other app you use.
+            </p>
+          </div>
+        )}
       </div>
 
-      <canvas ref={canvasRef} style={{ display: 'none' }} width="600" height="700" aria-hidden="true" />
+      <div className="mt-8 bg-gray-100 border border-gray-300 rounded-xl p-6">
+        <h4 className="text-lg font-bold text-gray-800 mb-3">
+          Important Reminders:
+        </h4>
+        <ul className="space-y-2 text-gray-700">
+          <li className="flex gap-2">
+            <span>•</span>
+            <span>Most people still donate cash - this is just an extra option</span>
+          </li>
+          <li className="flex gap-2">
+            <span>•</span>
+            <span>Keep your regular donation box - don't remove it</span>
+          </li>
+          <li className="flex gap-2">
+            <span>•</span>
+            <span>Test the QR code yourself before printing to make sure it works</span>
+          </li>
+          <li className="flex gap-2">
+            <span>•</span>
+            <span>The money goes directly to the mobile number you provided</span>
+          </li>
+        </ul>
+      </div>
+
+      <canvas ref={canvasRef} style={{ display: 'none' }} width="800" height="1100" aria-hidden="true" />
     </div>
   );
 }
