@@ -40,6 +40,11 @@ body {
   font-family: 'Noto Sans Gurmukhi', 'Atkinson Hyperlegible', system-ui, sans-serif;
 }
 
+/* Force Atkinson Hyperlegible for English text within RTL contexts */
+.atkinson-font {
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif !important;
+}
+
 /* High contrast focus states for accessibility */
 button:focus-visible,
 input:focus-visible {

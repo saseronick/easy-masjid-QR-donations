@@ -552,5 +552,14 @@ export const translations: Translations = {
     en: 'Choose Language',
     ur: 'زبان منتخب کریں',
     pa: 'ਭਾਸ਼ਾ ਚੁਣੋ'
+  },
+  masjidNamePlaceholder: {
+    en: 'Masjid Al-Noor',
+    ur: 'مسجد النور',
+    hi: 'मस्जिद अल-नूर',
+    ar: 'مسجد النور',
+    pa: 'ਮਸਜਿਦ ਅਲ-ਨੂਰ',
+    ps: 'جومات النور',
+    sd: 'مسجد النور'
   }
 };

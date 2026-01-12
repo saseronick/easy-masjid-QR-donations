@@ -8,9 +8,9 @@ interface PaymentFormProps {
   onSubmit: (paymentInfo: PaymentInfo) => void;
 }
 
-const paymentMethods = [
-  { id: 'jazzcash' as PaymentMethod, icon: Smartphone, label: 'JazzCash' },
-  { id: 'easypaisa' as PaymentMethod, icon: Smartphone, label: 'Easypaisa' }
+const getPaymentMethods = (language: Language) => [
+  { id: 'jazzcash' as PaymentMethod, icon: Smartphone, key: 'jazzcash' },
+  { id: 'easypaisa' as PaymentMethod, icon: Smartphone, key: 'easypaisa' }
 ];
 
 export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
@@ -21,6 +21,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
+  const paymentMethods = getPaymentMethods(language);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +50,8 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             <div className="grid grid-cols-1 gap-4">
               {paymentMethods.map((pm) => {
                 const Icon = pm.icon;
+                const label = t(pm.key);
+                const hasEnglishInLabel = /[A-Za-z]/.test(label);
                 return (
                   <button
                     key={pm.id}
@@ -64,7 +67,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
                     }`}
                   >
                     <Icon className="w-10 h-10 flex-shrink-0" aria-hidden="true" />
-                    <span className="text-xl font-bold">{pm.label}</span>
+                    <span className={`text-xl font-bold ${hasEnglishInLabel && isRTL ? 'atkinson-font' : ''}`}>{label}</span>
                   </button>
                 );
               })}
@@ -102,7 +105,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             required
             aria-required="true"
             aria-invalid={!name.trim() && error ? 'true' : 'false'}
-            placeholder="Masjid Al-Noor"
+            placeholder={t('masjidNamePlaceholder')}
             className={`w-full px-5 py-4 text-xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors ${
               isRTL ? 'text-right' : 'text-left'
             }`}
