@@ -69,7 +69,7 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
 
     const titleText = paymentInfo.name;
     ctx.fillStyle = '#000000';
-    ctx.font = 'bold 48px Arial, sans-serif';
+    ctx.font = 'bold 48px "Atkinson Hyperlegible", Arial, sans-serif';
     ctx.textAlign = 'center';
 
     const words = titleText.split(' ');
@@ -110,13 +110,13 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
       ctx.drawImage(qrCanvas, qrX, qrY);
 
       ctx.fillStyle = '#000000';
-      ctx.font = 'bold 36px Arial, sans-serif';
+      ctx.font = 'bold 36px "Atkinson Hyperlegible", Arial, sans-serif';
       ctx.fillText('Scan with Camera', canvas.width / 2, qrY + 560);
-      ctx.font = '28px Arial, sans-serif';
+      ctx.font = '28px "Noto Nastaliq Urdu", Arial, sans-serif';
       ctx.fillText('کیمرہ سے اسکین کریں', canvas.width / 2, qrY + 600);
 
       ctx.fillStyle = '#666666';
-      ctx.font = '24px Arial, sans-serif';
+      ctx.font = '24px "Atkinson Hyperlegible", Arial, sans-serif';
       const method = paymentInfo.method === 'jazzcash' ? 'JazzCash' : 'Easypaisa';
       ctx.fillText(`Opens ${method} app automatically`, canvas.width / 2, qrY + 660);
 

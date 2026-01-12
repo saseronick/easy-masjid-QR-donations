@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Font faces */
+/* Font faces - Using accessible fonts designed for neurodivergent readers */
 body {
-  font-family: 'Inter', 'Noto Sans Arabic', 'Noto Sans Devanagari', system-ui, sans-serif;
+  font-family: 'Atkinson Hyperlegible', 'Noto Nastaliq Urdu', 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -20,19 +20,24 @@ body {
   text-align: left;
 }
 
-/* Arabic/Urdu font support */
-[lang="ar"], [lang="ur"], [lang="ps"], [lang="sd"], .rtl {
-  font-family: 'Noto Sans Arabic', 'Inter', system-ui, sans-serif;
+/* English font support - Atkinson Hyperlegible from Braille Institute */
+[lang="en"], .ltr {
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
 }
 
-/* Hindi font support */
+/* Urdu/Arabic font support - Noto Nastaliq Urdu for better readability */
+[lang="ar"], [lang="ur"], [lang="ps"], [lang="sd"] {
+  font-family: 'Noto Nastaliq Urdu', 'Atkinson Hyperlegible', system-ui, sans-serif;
+}
+
+/* Hindi font support - Noto Sans Devanagari */
 [lang="hi"] {
-  font-family: 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
+  font-family: 'Noto Sans Devanagari', 'Atkinson Hyperlegible', system-ui, sans-serif;
 }
 
-/* Punjabi font support */
+/* Punjabi font support - Noto Sans Gurmukhi */
 [lang="pa"] {
-  font-family: 'Noto Sans Gurmukhi', 'Inter', system-ui, sans-serif;
+  font-family: 'Noto Sans Gurmukhi', 'Atkinson Hyperlegible', system-ui, sans-serif;
 }
 
 /* High contrast focus states for accessibility */
