@@ -47,7 +47,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
     <div className={`max-w-3xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
       <div className="bg-blue-50 border-l-4 border-blue-600 p-6 mb-8 rounded-lg">
         <p className="text-lg text-blue-900 font-medium leading-relaxed">
-          Most donations come from cash. This QR code adds a digital option for people who prefer mobile payments.
+          {t('cashContext')}
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
         <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
           <fieldset className="border-0 p-0 m-0">
             <legend className="block text-2xl font-bold text-gray-900 mb-6">
-              Step 1: Which app do people use to send you money?
+              {t('step1Question')}
             </legend>
             <div className="grid grid-cols-1 gap-4">
               {paymentMethods.map((pm) => {
@@ -73,7 +73,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
                     aria-pressed={method === pm.id}
                     role="radio"
                     aria-checked={method === pm.id}
-                    className={`min-h-[80px] p-6 rounded-xl border-3 transition-all flex items-center gap-4 text-left ${
+                    className={`min-h-[80px] p-6 rounded-xl border-3 transition-all flex items-center gap-4 ${isRTL ? 'text-right' : 'text-left'} ${
                       method === pm.id
                         ? 'border-green-700 bg-green-700 text-white shadow-lg'
                         : 'border-gray-300 bg-white text-gray-900 hover:border-green-600 hover:bg-green-50'
@@ -90,10 +90,10 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
 
         <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
           <label htmlFor="payment-identifier" className="block text-2xl font-bold text-gray-900 mb-4">
-            Step 2: Your mobile number
+            {t('step2Mobile')}
           </label>
           <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-            {method === 'jazzcash' ? 'Your JazzCash number (usually your personal mobile)' : 'Your Easypaisa number (usually your personal mobile)'}
+            {method === 'jazzcash' ? t('jazzcashNumberHelp') : t('easypaisaNumberHelp')}
           </p>
           <input
             id="payment-identifier"
@@ -111,10 +111,10 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
 
         <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
           <label htmlFor="organization-name" className="block text-2xl font-bold text-gray-900 mb-4">
-            Step 3: Masjid name
+            {t('step3Masjid')}
           </label>
           <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-            This will appear on the QR code so people know where they're donating
+            {t('masjidNameHelp')}
           </p>
           <input
             id="organization-name"
@@ -142,7 +142,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
           type="submit"
           className="w-full min-h-[80px] bg-green-700 text-white py-6 px-8 rounded-xl text-2xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg"
         >
-          Create QR Code for Printing
+          {t('createQRButton')}
         </button>
       </form>
     </div>

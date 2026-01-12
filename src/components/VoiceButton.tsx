@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import { translations } from '../data/translations';
 
 interface VoiceButtonProps {
   text: string;
@@ -8,6 +9,7 @@ interface VoiceButtonProps {
 
 export default function VoiceButton({ text, language }: VoiceButtonProps) {
   const [speaking, setSpeaking] = useState(false);
+  const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
 
   const speak = () => {
     if ('speechSynthesis' in window) {
@@ -59,12 +61,12 @@ export default function VoiceButton({ text, language }: VoiceButtonProps) {
       {speaking ? (
         <>
           <VolumeX className="w-8 h-8" aria-hidden="true" />
-          <span>STOP</span>
+          <span>{t('stopButton')}</span>
         </>
       ) : (
         <>
           <Volume2 className="w-8 h-8" aria-hidden="true" />
-          <span>LISTEN / سنیں</span>
+          <span>{t('listenButton')}</span>
         </>
       )}
     </button>

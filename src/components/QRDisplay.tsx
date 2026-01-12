@@ -179,15 +179,15 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
         aria-label="Go back"
       >
         <ArrowLeft className={`w-6 h-6 ${isRTL ? 'rotate-180' : ''}`} aria-hidden="true" />
-        <span>Make Another QR Code</span>
+        <span>{t('makeAnotherQR')}</span>
       </button>
 
       <div className="bg-green-50 border-l-4 border-green-600 p-6 mb-8 rounded-lg">
         <h2 className="text-2xl font-bold text-green-900 mb-3">
-          Your QR Code is Ready!
+          {t('qrReady')}
         </h2>
         <p className="text-lg text-green-800 leading-relaxed">
-          Download and print this QR code. Put it on or near your donation box. People with mobile phones can scan it to donate digitally while others can continue donating cash as usual.
+          {t('qrReadyInstructions')}
         </p>
       </div>
 
@@ -202,7 +202,7 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
             {paymentInfo.name}
           </h3>
           <p className="text-xl text-gray-700">
-            Digital Donation QR Code
+            {t('digitalDonationQR')}
           </p>
         </div>
 
@@ -219,24 +219,24 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
           <h4 className="text-xl font-bold text-blue-900 mb-3">
-            How it works:
+            {t('howItWorks')}
           </h4>
           <ol className="space-y-3 text-lg text-blue-900">
             <li className="flex gap-3">
               <span className="font-bold flex-shrink-0">1.</span>
-              <span>Download and print this QR code (black & white printing works fine)</span>
+              <span>{t('step1Print')}</span>
             </li>
             <li className="flex gap-3">
               <span className="font-bold flex-shrink-0">2.</span>
-              <span>Laminate or put in plastic sleeve for durability</span>
+              <span>{t('step2Laminate')}</span>
             </li>
             <li className="flex gap-3">
               <span className="font-bold flex-shrink-0">3.</span>
-              <span>Attach to or near your donation box where people can see it</span>
+              <span>{t('step3Attach')}</span>
             </li>
             <li className="flex gap-3">
               <span className="font-bold flex-shrink-0">4.</span>
-              <span>People scan with their phone camera - the payment app opens automatically</span>
+              <span>{t('step4Scan')}</span>
             </li>
           </ol>
         </div>
@@ -247,7 +247,7 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
             className="min-h-[80px] bg-green-700 text-white py-6 px-8 rounded-xl text-2xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg flex items-center justify-center gap-4"
           >
             <Download className="w-10 h-10" aria-hidden="true" />
-            Download QR Code to Print
+            {t('downloadToPrint')}
           </button>
 
           <button
@@ -255,14 +255,14 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
             className="min-h-[70px] bg-white text-gray-800 py-5 px-6 rounded-xl text-xl font-bold border-3 border-gray-300 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors flex items-center justify-center gap-3"
           >
             <Share2 className="w-8 h-8" aria-hidden="true" />
-            Share Digital Copy (WhatsApp, etc.)
+            {t('shareDigitalCopy')}
           </button>
         </div>
 
         {showShareTip && (
           <div className="mt-6 bg-yellow-50 border border-yellow-300 rounded-lg p-5">
             <p className="text-yellow-900 text-base">
-              <strong>Tip:</strong> Download the QR code first, then share the image file through WhatsApp, Facebook, or any other app you use.
+              {t('shareTip')}
             </p>
           </div>
         )}
@@ -270,24 +270,24 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
 
       <div className="mt-8 bg-gray-100 border border-gray-300 rounded-xl p-6">
         <h4 className="text-lg font-bold text-gray-800 mb-3">
-          Important Reminders:
+          {t('importantReminders')}
         </h4>
         <ul className="space-y-2 text-gray-700">
           <li className="flex gap-2">
             <span>•</span>
-            <span>Most people still donate cash - this is just an extra option</span>
+            <span>{t('reminder1')}</span>
           </li>
           <li className="flex gap-2">
             <span>•</span>
-            <span>Keep your regular donation box - don't remove it</span>
+            <span>{t('reminder2')}</span>
           </li>
           <li className="flex gap-2">
             <span>•</span>
-            <span>Test the QR code yourself before printing to make sure it works</span>
+            <span>{t('reminder3')}</span>
           </li>
           <li className="flex gap-2">
             <span>•</span>
-            <span>The money goes directly to the mobile number you provided</span>
+            <span>{t('reminder4')}</span>
           </li>
         </ul>
       </div>

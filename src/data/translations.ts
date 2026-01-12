@@ -477,5 +477,145 @@ export const translations: Translations = {
     pa: 'ਆਪਣੇ ਫੋਨ ਦੇ ਕੈਮਰੇ ਨਾਲ ਇਸ QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰੋ। ਇਹ ਤੁਹਾਡੀ ਭੁਗਤਾਨ ਐਪ ਨੂੰ ਸਿੱਧੇ ਖੋਲ੍ਹੇਗਾ।',
     ps: 'د خپل ټیلیفون د کیمرې سره دا QR کوډ سکین کړئ. دا ستاسو د تادیاتو ایپ مستقیم خلاصوي.',
     sd: 'پنهنجي فون جي ڪئميرا سان هن QR ڪوڊ کي اسڪين ڪريو. اهو توهان جي ادائگي ايپ کي سڌو کوليندو.'
+  },
+  cashContext: {
+    en: 'Most donations come from cash. This QR code adds a digital option for people who prefer mobile payments.',
+    ur: 'زیادہ تر عطیات نقد رقم سے آتے ہیں۔ یہ کیو آر کوڈ ان لوگوں کے لیے ڈیجیٹل آپشن شامل کرتا ہے جو موبائل پیمنٹس کو ترجیح دیتے ہیں۔',
+    pa: 'ਜ਼ਿਆਦਾਤਰ ਦਾਨ ਨਕਦੀ ਰਾਹੀਂ ਆਉਂਦੇ ਹਨ। ਇਹ QR ਕੋਡ ਉਨ੍ਹਾਂ ਲੋਕਾਂ ਲਈ ਇੱਕ ਡਿਜੀਟਲ ਵਿਕਲਪ ਜੋੜਦਾ ਹੈ ਜੋ ਮੋਬਾਈਲ ਭੁਗਤਾਨਾਂ ਨੂੰ ਤਰਜੀਹ ਦਿੰਦੇ ਹਨ।'
+  },
+  step1Question: {
+    en: 'Step 1: Which app do people use to send you money?',
+    ur: 'مرحلہ 1: لوگ آپ کو رقم بھیجنے کے لیے کون سی ایپ استعمال کرتے ہیں؟',
+    pa: 'ਕਦਮ 1: ਲੋਕ ਤੁਹਾਨੂੰ ਪੈਸੇ ਭੇਜਣ ਲਈ ਕਿਹੜੀ ਐਪ ਵਰਤਦੇ ਹਨ?'
+  },
+  step2Mobile: {
+    en: 'Step 2: Your mobile number',
+    ur: 'مرحلہ 2: آپ کا موبائل نمبر',
+    pa: 'ਕਦਮ 2: ਤੁਹਾਡਾ ਮੋਬਾਈਲ ਨੰਬਰ'
+  },
+  step3Masjid: {
+    en: 'Step 3: Masjid name',
+    ur: 'مرحلہ 3: مسجد کا نام',
+    pa: 'ਕਦਮ 3: ਮਸਜਿਦ ਦਾ ਨਾਮ'
+  },
+  jazzcashNumberHelp: {
+    en: 'Your JazzCash number (usually your personal mobile)',
+    ur: 'آپ کا جاز کیش نمبر (عام طور پر آپ کا ذاتی موبائل)',
+    pa: 'ਤੁਹਾਡਾ JazzCash ਨੰਬਰ (ਆਮ ਤੌਰ ਤੇ ਤੁਹਾਡਾ ਨਿੱਜੀ ਮੋਬਾਈਲ)'
+  },
+  easypaisaNumberHelp: {
+    en: 'Your Easypaisa number (usually your personal mobile)',
+    ur: 'آپ کا ایزی پیسہ نمبر (عام طور پر آپ کا ذاتی موبائل)',
+    pa: 'ਤੁਹਾਡਾ Easypaisa ਨੰਬਰ (ਆਮ ਤੌਰ ਤੇ ਤੁਹਾਡਾ ਨਿੱਜੀ ਮੋਬਾਈਲ)'
+  },
+  masjidNameHelp: {
+    en: 'This will appear on the QR code so people know where they\'re donating',
+    ur: 'یہ کیو آر کوڈ پر ظاہر ہوگا تاکہ لوگوں کو معلوم ہو کہ وہ کہاں عطیہ کر رہے ہیں',
+    pa: 'ਇਹ QR ਕੋਡ ਤੇ ਦਿਖਾਈ ਦੇਵੇਗਾ ਤਾਂ ਜੋ ਲੋਕਾਂ ਨੂੰ ਪਤਾ ਲੱਗੇ ਕਿ ਉਹ ਕਿੱਥੇ ਦਾਨ ਕਰ ਰਹੇ ਹਨ'
+  },
+  createQRButton: {
+    en: 'Create QR Code for Printing',
+    ur: 'پرنٹنگ کے لیے کیو آر کوڈ بنائیں',
+    pa: 'ਪ੍ਰਿੰਟਿੰਗ ਲਈ QR ਕੋਡ ਬਣਾਓ'
+  },
+  qrReady: {
+    en: 'Your QR Code is Ready!',
+    ur: 'آپ کا کیو آر کوڈ تیار ہے!',
+    pa: 'ਤੁਹਾਡਾ QR ਕੋਡ ਤਿਆਰ ਹੈ!'
+  },
+  qrReadyInstructions: {
+    en: 'Download and print this QR code. Put it on or near your donation box. People with mobile phones can scan it to donate digitally while others can continue donating cash as usual.',
+    ur: 'اس کیو آر کوڈ کو ڈاؤن لوڈ اور پرنٹ کریں۔ اسے اپنے عطیات کے باکس پر یا اس کے قریب رکھیں۔ موبائل فون والے لوگ اسے اسکین کر کے ڈیجیٹل طور پر عطیہ کر سکتے ہیں جبکہ دوسرے معمول کے مطابق نقد عطیہ کرنا جاری رکھ سکتے ہیں۔',
+    pa: 'ਇਸ QR ਕੋਡ ਨੂੰ ਡਾਊਨਲੋਡ ਅਤੇ ਪ੍ਰਿੰਟ ਕਰੋ। ਇਸਨੂੰ ਆਪਣੇ ਦਾਨ ਬਾਕਸ ਤੇ ਜਾਂ ਇਸਦੇ ਨੇੜੇ ਰੱਖੋ। ਮੋਬਾਈਲ ਫੋਨਾਂ ਵਾਲੇ ਲੋਕ ਇਸਨੂੰ ਸਕੈਨ ਕਰਕੇ ਡਿਜੀਟਲ ਤਰੀਕੇ ਨਾਲ ਦਾਨ ਕਰ ਸਕਦੇ ਹਨ ਜਦੋਂ ਕਿ ਦੂਜੇ ਆਮ ਵਾਂਗ ਨਕਦ ਦਾਨ ਕਰਨਾ ਜਾਰੀ ਰੱਖ ਸਕਦੇ ਹਨ।'
+  },
+  makeAnotherQR: {
+    en: 'Make Another QR Code',
+    ur: 'ایک اور کیو آر کوڈ بنائیں',
+    pa: 'ਇੱਕ ਹੋਰ QR ਕੋਡ ਬਣਾਓ'
+  },
+  digitalDonationQR: {
+    en: 'Digital Donation QR Code',
+    ur: 'ڈیجیٹل عطیہ کیو آر کوڈ',
+    pa: 'ਡਿਜੀਟਲ ਦਾਨ QR ਕੋਡ'
+  },
+  howItWorks: {
+    en: 'How it works:',
+    ur: 'یہ کیسے کام کرتا ہے:',
+    pa: 'ਇਹ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ:'
+  },
+  step1Print: {
+    en: 'Download and print this QR code (black & white printing works fine)',
+    ur: 'اس کیو آر کوڈ کو ڈاؤن لوڈ اور پرنٹ کریں (سیاہ اور سفید پرنٹنگ ٹھیک کام کرتی ہے)',
+    pa: 'ਇਸ QR ਕੋਡ ਨੂੰ ਡਾਊਨਲੋਡ ਅਤੇ ਪ੍ਰਿੰਟ ਕਰੋ (ਕਾਲੀ ਅਤੇ ਚਿੱਟੀ ਪ੍ਰਿੰਟਿੰਗ ਵਧੀਆ ਕੰਮ ਕਰਦੀ ਹੈ)'
+  },
+  step2Laminate: {
+    en: 'Laminate or put in plastic sleeve for durability',
+    ur: 'پائیداری کے لیے لیمینیٹ کریں یا پلاسٹک کی آستین میں رکھیں',
+    pa: 'ਟਿਕਾਊਪਨ ਲਈ ਲੈਮੀਨੇਟ ਕਰੋ ਜਾਂ ਪਲਾਸਟਿਕ ਸਲੀਵ ਵਿੱਚ ਪਾਓ'
+  },
+  step3Attach: {
+    en: 'Attach to or near your donation box where people can see it',
+    ur: 'اپنے عطیات کے باکس پر یا اس کے قریب لگائیں جہاں لوگ اسے دیکھ سکیں',
+    pa: 'ਆਪਣੇ ਦਾਨ ਬਾਕਸ ਤੇ ਜਾਂ ਇਸਦੇ ਨੇੜੇ ਲਗਾਓ ਜਿੱਥੇ ਲੋਕ ਇਸਨੂੰ ਦੇਖ ਸਕਣ'
+  },
+  step4Scan: {
+    en: 'People scan with their phone camera - the payment app opens automatically',
+    ur: 'لوگ اپنے فون کے کیمرے سے اسکین کرتے ہیں - پیمنٹ ایپ خود بخود کھل جاتی ہے',
+    pa: 'ਲੋਕ ਆਪਣੇ ਫੋਨ ਦੇ ਕੈਮਰੇ ਨਾਲ ਸਕੈਨ ਕਰਦੇ ਹਨ - ਭੁਗਤਾਨ ਐਪ ਆਪਣੇ ਆਪ ਖੁੱਲ੍ਹਦੀ ਹੈ'
+  },
+  downloadToPrint: {
+    en: 'Download QR Code to Print',
+    ur: 'پرنٹ کرنے کے لیے کیو آر کوڈ ڈاؤن لوڈ کریں',
+    pa: 'ਪ੍ਰਿੰਟ ਕਰਨ ਲਈ QR ਕੋਡ ਡਾਊਨਲੋਡ ਕਰੋ'
+  },
+  shareDigitalCopy: {
+    en: 'Share Digital Copy (WhatsApp, etc.)',
+    ur: 'ڈیجیٹل کاپی شیئر کریں (واٹس ایپ وغیرہ)',
+    pa: 'ਡਿਜੀਟਲ ਕਾਪੀ ਸਾਂਝੀ ਕਰੋ (WhatsApp, ਆਦਿ)'
+  },
+  shareTip: {
+    en: 'Tip: Download the QR code first, then share the image file through WhatsApp, Facebook, or any other app you use.',
+    ur: 'تجویز: پہلے کیو آر کوڈ ڈاؤن لوڈ کریں، پھر تصویری فائل کو واٹس ایپ، فیس بک، یا کسی اور ایپ کے ذریعے شیئر کریں۔',
+    pa: 'ਸੁਝਾਅ: ਪਹਿਲਾਂ QR ਕੋਡ ਡਾਊਨਲੋਡ ਕਰੋ, ਫਿਰ ਚਿੱਤਰ ਫਾਈਲ ਨੂੰ WhatsApp, Facebook, ਜਾਂ ਕਿਸੇ ਹੋਰ ਐਪ ਰਾਹੀਂ ਸਾਂਝਾ ਕਰੋ।'
+  },
+  importantReminders: {
+    en: 'Important Reminders:',
+    ur: 'اہم یاد دہانیاں:',
+    pa: 'ਮਹੱਤਵਪੂਰਨ ਯਾਦ ਦਿਵਾਉਣੇ:'
+  },
+  reminder1: {
+    en: 'Most people still donate cash - this is just an extra option',
+    ur: 'زیادہ تر لوگ اب بھی نقد عطیہ کرتے ہیں - یہ صرف ایک اضافی آپشن ہے',
+    pa: 'ਜ਼ਿਆਦਾਤਰ ਲੋਕ ਅਜੇ ਵੀ ਨਕਦ ਦਾਨ ਕਰਦੇ ਹਨ - ਇਹ ਸਿਰਫ਼ ਇੱਕ ਵਾਧੂ ਵਿਕਲਪ ਹੈ'
+  },
+  reminder2: {
+    en: 'Keep your regular donation box - don\'t remove it',
+    ur: 'اپنا باقاعدہ عطیات کا باکس رکھیں - اسے ہٹائیں نہیں',
+    pa: 'ਆਪਣਾ ਨਿਯਮਤ ਦਾਨ ਬਾਕਸ ਰੱਖੋ - ਇਸਨੂੰ ਹਟਾਓ ਨਹੀਂ'
+  },
+  reminder3: {
+    en: 'Test the QR code yourself before printing to make sure it works',
+    ur: 'پرنٹ کرنے سے پہلے خود کیو آر کوڈ کو ٹیسٹ کریں تاکہ یقینی بنایا جا سکے کہ یہ کام کرتا ہے',
+    pa: 'ਪ੍ਰਿੰਟ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਖੁਦ QR ਕੋਡ ਦੀ ਜਾਂਚ ਕਰੋ ਤਾਂ ਜੋ ਇਹ ਯਕੀਨੀ ਬਣਾਇਆ ਜਾ ਸਕੇ ਕਿ ਇਹ ਕੰਮ ਕਰਦਾ ਹੈ'
+  },
+  reminder4: {
+    en: 'The money goes directly to the mobile number you provided',
+    ur: 'رقم براہ راست آپ کے فراہم کردہ موبائل نمبر پر جاتی ہے',
+    pa: 'ਪੈਸੇ ਸਿੱਧੇ ਤੁਹਾਡੇ ਦੁਆਰਾ ਦਿੱਤੇ ਗਏ ਮੋਬਾਈਲ ਨੰਬਰ ਤੇ ਜਾਂਦੇ ਹਨ'
+  },
+  listenButton: {
+    en: 'LISTEN',
+    ur: 'سنیں',
+    pa: 'ਸੁਣੋ'
+  },
+  stopButton: {
+    en: 'STOP',
+    ur: 'رکیں',
+    pa: 'ਰੁਕੋ'
+  },
+  chooseLanguage: {
+    en: 'Choose Language',
+    ur: 'زبان منتخب کریں',
+    pa: 'ਭਾਸ਼ਾ ਚੁਣੋ'
   }
 };

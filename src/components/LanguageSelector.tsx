@@ -1,5 +1,6 @@
 import React from 'react';
 import { Language } from '../types';
+import { translations } from '../data/translations';
 
 interface LanguageSelectorProps {
   currentLanguage: Language;
@@ -13,10 +14,12 @@ const languages = [
 ];
 
 export default function LanguageSelector({ currentLanguage, onLanguageChange }: LanguageSelectorProps) {
+  const t = (key: string) => translations[key]?.[currentLanguage] || translations[key]?.en || key;
+
   return (
     <div className="mb-10" role="group" aria-labelledby="language-selector-label">
       <h2 id="language-selector-label" className="text-2xl font-bold text-gray-800 mb-6 text-center">
-        Choose Language / زبان منتخب کریں
+        {t('chooseLanguage')} / {translations['chooseLanguage']['ur']}
       </h2>
       <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto">
         {languages.map((lang) => (
