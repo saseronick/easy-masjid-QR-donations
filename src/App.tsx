@@ -56,6 +56,13 @@ function App() {
             />
           )}
         </main>
+
+        {/* Footer */}
+        <footer className="mt-16 text-center text-gray-600" role="contentinfo">
+          <p className="text-lg font-medium">
+            {t('completelyFreeService')}
+          </p>
+        </footer>
       </div>
     </div>
   );
