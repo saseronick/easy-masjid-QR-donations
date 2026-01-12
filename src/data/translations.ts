@@ -617,5 +617,15 @@ export const translations: Translations = {
     en: 'Choose Language',
     ur: 'زبان منتخب کریں',
     pa: 'ਭਾਸ਼ਾ ਚੁਣੋ'
+  },
+  voiceInstructionsForm: {
+    en: 'Enter your phone number for JazzCash or Easypaisa. Then enter your masjid name. This will create a QR code that people can scan to donate.',
+    ur: 'اپنا جاز کیش یا ایزی پیسہ کے لیے فون نمبر درج کریں۔ پھر اپنی مسجد کا نام درج کریں۔ یہ ایک کیو آر کوڈ بنائے گا جسے لوگ عطیہ کرنے کے لیے اسکین کر سکتے ہیں۔',
+    pa: 'ਆਪਣਾ JazzCash ਜਾਂ Easypaisa ਲਈ ਫੋਨ ਨੰਬਰ ਦਾਖਲ ਕਰੋ। ਫਿਰ ਆਪਣੀ ਮਸਜਿਦ ਦਾ ਨਾਮ ਦਾਖਲ ਕਰੋ। ਇਹ ਇੱਕ QR ਕੋਡ ਬਣਾਏਗਾ ਜਿਸ ਨੂੰ ਲੋਕ ਦਾਨ ਕਰਨ ਲਈ ਸਕੈਨ ਕਰ ਸਕਦੇ ਹਨ।'
+  },
+  voiceInstructionsQR: {
+    en: 'Your QR code is ready. Download it and print it on paper. Put it on your donation box. People can scan it with their phone camera to donate. Cash donations are still the main way people donate.',
+    ur: 'آپ کا کیو آر کوڈ تیار ہے۔ اسے ڈاؤن لوڈ کریں اور کاغذ پر پرنٹ کریں۔ اسے اپنے عطیات کے باکس پر رکھیں۔ لوگ عطیہ کرنے کے لیے اپنے فون کے کیمرے سے اسکین کر سکتے ہیں۔ نقد عطیات اب بھی لوگوں کے عطیہ کرنے کا بنیادی طریقہ ہیں۔',
+    pa: 'ਤੁਹਾਡਾ QR ਕੋਡ ਤਿਆਰ ਹੈ। ਇਸਨੂੰ ਡਾਊਨਲੋਡ ਕਰੋ ਅਤੇ ਕਾਗਜ਼ ਤੇ ਪ੍ਰਿੰਟ ਕਰੋ। ਇਸਨੂੰ ਆਪਣੇ ਦਾਨ ਬਾਕਸ ਤੇ ਰੱਖੋ। ਲੋਕ ਦਾਨ ਕਰਨ ਲਈ ਆਪਣੇ ਫੋਨ ਦੇ ਕੈਮਰੇ ਨਾਲ ਇਸਨੂੰ ਸਕੈਨ ਕਰ ਸਕਦੇ ਹਨ। ਨਕਦ ਦਾਨ ਅਜੇ ਵੀ ਲੋਕਾਂ ਦੇ ਦਾਨ ਕਰਨ ਦਾ ਮੁੱਖ ਤਰੀਕਾ ਹੈ।'
   }
 };

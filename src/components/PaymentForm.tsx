@@ -39,10 +39,6 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
     });
   };
 
-  const instructions = method === 'jazzcash'
-    ? 'Enter your JazzCash phone number (example: 03001234567)'
-    : 'Enter your Easypaisa phone number (example: 03001234567)';
-
   return (
     <div className={`max-w-3xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
       <div className="bg-blue-50 border-l-4 border-blue-600 p-6 mb-8 rounded-lg">
@@ -52,7 +48,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
       </div>
 
       <VoiceButton
-        text={instructions}
+        text={t('voiceInstructionsForm')}
         language={language}
       />
 

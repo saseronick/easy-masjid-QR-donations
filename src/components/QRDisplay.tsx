@@ -169,8 +169,6 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
     }
   };
 
-  const instruction = `Your QR code is ready. Download it and print it on paper. Put it on your donation box. People can scan it with their phone camera to donate using ${paymentInfo.method === 'jazzcash' ? 'JazzCash' : 'Easypaisa'}. Cash donations are still the main way people donate.`;
-
   return (
     <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
       <button
@@ -192,7 +190,7 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
       </div>
 
       <VoiceButton
-        text={instruction}
+        text={t('voiceInstructionsQR')}
         language={language}
       />
 
