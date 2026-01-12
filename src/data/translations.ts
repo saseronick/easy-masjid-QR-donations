@@ -478,11 +478,6 @@ export const translations: Translations = {
     ps: 'د خپل ټیلیفون د کیمرې سره دا QR کوډ سکین کړئ. دا ستاسو د تادیاتو ایپ مستقیم خلاصوي.',
     sd: 'پنهنجي فون جي ڪئميرا سان هن QR ڪوڊ کي اسڪين ڪريو. اهو توهان جي ادائگي ايپ کي سڌو کوليندو.'
   },
-  cashContext: {
-    en: 'Most donations come from cash. This QR code adds a digital option for people who prefer mobile payments.',
-    ur: 'زیادہ تر عطیات نقد رقم سے آتے ہیں۔ یہ کیو آر کوڈ ان لوگوں کے لیے ڈیجیٹل آپشن شامل کرتا ہے جو موبائل پیمنٹس کو ترجیح دیتے ہیں۔',
-    pa: 'ਜ਼ਿਆਦਾਤਰ ਦਾਨ ਨਕਦੀ ਰਾਹੀਂ ਆਉਂਦੇ ਹਨ। ਇਹ QR ਕੋਡ ਉਨ੍ਹਾਂ ਲੋਕਾਂ ਲਈ ਇੱਕ ਡਿਜੀਟਲ ਵਿਕਲਪ ਜੋੜਦਾ ਹੈ ਜੋ ਮੋਬਾਈਲ ਭੁਗਤਾਨਾਂ ਨੂੰ ਤਰਜੀਹ ਦਿੰਦੇ ਹਨ।'
-  },
   step1Question: {
     en: 'Step 1: Which app do people use to send you money?',
     ur: 'مرحلہ 1: لوگ آپ کو رقم بھیجنے کے لیے کون سی ایپ استعمال کرتے ہیں؟',
@@ -498,35 +493,10 @@ export const translations: Translations = {
     ur: 'مرحلہ 3: مسجد کا نام',
     pa: 'ਕਦਮ 3: ਮਸਜਿਦ ਦਾ ਨਾਮ'
   },
-  jazzcashNumberHelp: {
-    en: 'Your JazzCash number (usually your personal mobile)',
-    ur: 'آپ کا جاز کیش نمبر (عام طور پر آپ کا ذاتی موبائل)',
-    pa: 'ਤੁਹਾਡਾ JazzCash ਨੰਬਰ (ਆਮ ਤੌਰ ਤੇ ਤੁਹਾਡਾ ਨਿੱਜੀ ਮੋਬਾਈਲ)'
-  },
-  easypaisaNumberHelp: {
-    en: 'Your Easypaisa number (usually your personal mobile)',
-    ur: 'آپ کا ایزی پیسہ نمبر (عام طور پر آپ کا ذاتی موبائل)',
-    pa: 'ਤੁਹਾਡਾ Easypaisa ਨੰਬਰ (ਆਮ ਤੌਰ ਤੇ ਤੁਹਾਡਾ ਨਿੱਜੀ ਮੋਬਾਈਲ)'
-  },
-  masjidNameHelp: {
-    en: 'This will appear on the QR code so people know where they\'re donating',
-    ur: 'یہ کیو آر کوڈ پر ظاہر ہوگا تاکہ لوگوں کو معلوم ہو کہ وہ کہاں عطیہ کر رہے ہیں',
-    pa: 'ਇਹ QR ਕੋਡ ਤੇ ਦਿਖਾਈ ਦੇਵੇਗਾ ਤਾਂ ਜੋ ਲੋਕਾਂ ਨੂੰ ਪਤਾ ਲੱਗੇ ਕਿ ਉਹ ਕਿੱਥੇ ਦਾਨ ਕਰ ਰਹੇ ਹਨ'
-  },
   createQRButton: {
     en: 'Create QR Code for Printing',
     ur: 'پرنٹنگ کے لیے کیو آر کوڈ بنائیں',
     pa: 'ਪ੍ਰਿੰਟਿੰਗ ਲਈ QR ਕੋਡ ਬਣਾਓ'
-  },
-  qrReady: {
-    en: 'Your QR Code is Ready!',
-    ur: 'آپ کا کیو آر کوڈ تیار ہے!',
-    pa: 'ਤੁਹਾਡਾ QR ਕੋਡ ਤਿਆਰ ਹੈ!'
-  },
-  qrReadyInstructions: {
-    en: 'Download and print this QR code. Put it on or near your donation box. People with mobile phones can scan it to donate digitally while others can continue donating cash as usual.',
-    ur: 'اس کیو آر کوڈ کو ڈاؤن لوڈ اور پرنٹ کریں۔ اسے اپنے عطیات کے باکس پر یا اس کے قریب رکھیں۔ موبائل فون والے لوگ اسے اسکین کر کے ڈیجیٹل طور پر عطیہ کر سکتے ہیں جبکہ دوسرے معمول کے مطابق نقد عطیہ کرنا جاری رکھ سکتے ہیں۔',
-    pa: 'ਇਸ QR ਕੋਡ ਨੂੰ ਡਾਊਨਲੋਡ ਅਤੇ ਪ੍ਰਿੰਟ ਕਰੋ। ਇਸਨੂੰ ਆਪਣੇ ਦਾਨ ਬਾਕਸ ਤੇ ਜਾਂ ਇਸਦੇ ਨੇੜੇ ਰੱਖੋ। ਮੋਬਾਈਲ ਫੋਨਾਂ ਵਾਲੇ ਲੋਕ ਇਸਨੂੰ ਸਕੈਨ ਕਰਕੇ ਡਿਜੀਟਲ ਤਰੀਕੇ ਨਾਲ ਦਾਨ ਕਰ ਸਕਦੇ ਹਨ ਜਦੋਂ ਕਿ ਦੂਜੇ ਆਮ ਵਾਂਗ ਨਕਦ ਦਾਨ ਕਰਨਾ ਜਾਰੀ ਰੱਖ ਸਕਦੇ ਹਨ।'
   },
   makeAnotherQR: {
     en: 'Make Another QR Code',
@@ -578,54 +548,9 @@ export const translations: Translations = {
     ur: 'تجویز: پہلے کیو آر کوڈ ڈاؤن لوڈ کریں، پھر تصویری فائل کو واٹس ایپ، فیس بک، یا کسی اور ایپ کے ذریعے شیئر کریں۔',
     pa: 'ਸੁਝਾਅ: ਪਹਿਲਾਂ QR ਕੋਡ ਡਾਊਨਲੋਡ ਕਰੋ, ਫਿਰ ਚਿੱਤਰ ਫਾਈਲ ਨੂੰ WhatsApp, Facebook, ਜਾਂ ਕਿਸੇ ਹੋਰ ਐਪ ਰਾਹੀਂ ਸਾਂਝਾ ਕਰੋ।'
   },
-  importantReminders: {
-    en: 'Important Reminders:',
-    ur: 'اہم یاد دہانیاں:',
-    pa: 'ਮਹੱਤਵਪੂਰਨ ਯਾਦ ਦਿਵਾਉਣੇ:'
-  },
-  reminder1: {
-    en: 'Most people still donate cash - this is just an extra option',
-    ur: 'زیادہ تر لوگ اب بھی نقد عطیہ کرتے ہیں - یہ صرف ایک اضافی آپشن ہے',
-    pa: 'ਜ਼ਿਆਦਾਤਰ ਲੋਕ ਅਜੇ ਵੀ ਨਕਦ ਦਾਨ ਕਰਦੇ ਹਨ - ਇਹ ਸਿਰਫ਼ ਇੱਕ ਵਾਧੂ ਵਿਕਲਪ ਹੈ'
-  },
-  reminder2: {
-    en: 'Keep your regular donation box - don\'t remove it',
-    ur: 'اپنا باقاعدہ عطیات کا باکس رکھیں - اسے ہٹائیں نہیں',
-    pa: 'ਆਪਣਾ ਨਿਯਮਤ ਦਾਨ ਬਾਕਸ ਰੱਖੋ - ਇਸਨੂੰ ਹਟਾਓ ਨਹੀਂ'
-  },
-  reminder3: {
-    en: 'Test the QR code yourself before printing to make sure it works',
-    ur: 'پرنٹ کرنے سے پہلے خود کیو آر کوڈ کو ٹیسٹ کریں تاکہ یقینی بنایا جا سکے کہ یہ کام کرتا ہے',
-    pa: 'ਪ੍ਰਿੰਟ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਖੁਦ QR ਕੋਡ ਦੀ ਜਾਂਚ ਕਰੋ ਤਾਂ ਜੋ ਇਹ ਯਕੀਨੀ ਬਣਾਇਆ ਜਾ ਸਕੇ ਕਿ ਇਹ ਕੰਮ ਕਰਦਾ ਹੈ'
-  },
-  reminder4: {
-    en: 'The money goes directly to the mobile number you provided',
-    ur: 'رقم براہ راست آپ کے فراہم کردہ موبائل نمبر پر جاتی ہے',
-    pa: 'ਪੈਸੇ ਸਿੱਧੇ ਤੁਹਾਡੇ ਦੁਆਰਾ ਦਿੱਤੇ ਗਏ ਮੋਬਾਈਲ ਨੰਬਰ ਤੇ ਜਾਂਦੇ ਹਨ'
-  },
-  listenButton: {
-    en: 'LISTEN',
-    ur: 'سنیں',
-    pa: 'ਸੁਣੋ'
-  },
-  stopButton: {
-    en: 'STOP',
-    ur: 'رکیں',
-    pa: 'ਰੁਕੋ'
-  },
   chooseLanguage: {
     en: 'Choose Language',
     ur: 'زبان منتخب کریں',
     pa: 'ਭਾਸ਼ਾ ਚੁਣੋ'
-  },
-  voiceInstructionsForm: {
-    en: 'Enter your phone number for JazzCash or Easypaisa. Then enter your masjid name. This will create a QR code that people can scan to donate.',
-    ur: 'اپنا جاز کیش یا ایزی پیسہ کے لیے فون نمبر درج کریں۔ پھر اپنی مسجد کا نام درج کریں۔ یہ ایک کیو آر کوڈ بنائے گا جسے لوگ عطیہ کرنے کے لیے اسکین کر سکتے ہیں۔',
-    pa: 'ਆਪਣਾ JazzCash ਜਾਂ Easypaisa ਲਈ ਫੋਨ ਨੰਬਰ ਦਾਖਲ ਕਰੋ। ਫਿਰ ਆਪਣੀ ਮਸਜਿਦ ਦਾ ਨਾਮ ਦਾਖਲ ਕਰੋ। ਇਹ ਇੱਕ QR ਕੋਡ ਬਣਾਏਗਾ ਜਿਸ ਨੂੰ ਲੋਕ ਦਾਨ ਕਰਨ ਲਈ ਸਕੈਨ ਕਰ ਸਕਦੇ ਹਨ।'
-  },
-  voiceInstructionsQR: {
-    en: 'Your QR code is ready. Download it and print it on paper. Put it on your donation box. People can scan it with their phone camera to donate. Cash donations are still the main way people donate.',
-    ur: 'آپ کا کیو آر کوڈ تیار ہے۔ اسے ڈاؤن لوڈ کریں اور کاغذ پر پرنٹ کریں۔ اسے اپنے عطیات کے باکس پر رکھیں۔ لوگ عطیہ کرنے کے لیے اپنے فون کے کیمرے سے اسکین کر سکتے ہیں۔ نقد عطیات اب بھی لوگوں کے عطیہ کرنے کا بنیادی طریقہ ہیں۔',
-    pa: 'ਤੁਹਾਡਾ QR ਕੋਡ ਤਿਆਰ ਹੈ। ਇਸਨੂੰ ਡਾਊਨਲੋਡ ਕਰੋ ਅਤੇ ਕਾਗਜ਼ ਤੇ ਪ੍ਰਿੰਟ ਕਰੋ। ਇਸਨੂੰ ਆਪਣੇ ਦਾਨ ਬਾਕਸ ਤੇ ਰੱਖੋ। ਲੋਕ ਦਾਨ ਕਰਨ ਲਈ ਆਪਣੇ ਫੋਨ ਦੇ ਕੈਮਰੇ ਨਾਲ ਇਸਨੂੰ ਸਕੈਨ ਕਰ ਸਕਦੇ ਹਨ। ਨਕਦ ਦਾਨ ਅਜੇ ਵੀ ਲੋਕਾਂ ਦੇ ਦਾਨ ਕਰਨ ਦਾ ਮੁੱਖ ਤਰੀਕਾ ਹੈ।'
   }
 };

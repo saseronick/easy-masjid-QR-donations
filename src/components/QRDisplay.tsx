@@ -3,7 +3,6 @@ import { ArrowLeft, Download, Share2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { PaymentInfo, Language } from '../types';
 import { translations } from '../data/translations';
-import VoiceButton from './VoiceButton';
 
 interface QRDisplayProps {
   paymentInfo: PaymentInfo;
@@ -121,18 +120,6 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
       const method = paymentInfo.method === 'jazzcash' ? 'JazzCash' : 'Easypaisa';
       ctx.fillText(`Opens ${method} app automatically`, canvas.width / 2, qrY + 660);
 
-      ctx.strokeStyle = '#CCCCCC';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(100, qrY + 700);
-      ctx.lineTo(700, qrY + 700);
-      ctx.stroke();
-
-      ctx.fillStyle = '#666666';
-      ctx.font = 'bold 22px Arial, sans-serif';
-      ctx.fillText('Cash donations also welcome', canvas.width / 2, qrY + 750);
-      ctx.font = '22px Arial, sans-serif';
-      ctx.fillText('نقد عطیات بھی قبول ہیں', canvas.width / 2, qrY + 785);
 
       const dataUrl = canvas.toDataURL('image/png');
       setQrPrintDataUrl(dataUrl);
@@ -173,38 +160,47 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
     <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
       <button
         onClick={onBack}
-        className="min-h-[60px] px-6 py-4 rounded-xl text-lg font-bold border-3 border-gray-400 bg-white text-gray-800 hover:bg-gray-100 active:bg-gray-200 flex items-center gap-3 transition-all mb-8 shadow-sm"
+        className="min-h-[60px] px-6 py-4 rounded-xl text-lg font-bold border-3 border-gray-400 bg-white text-gray-800 hover:bg-gray-100 active:bg-gray-200 flex items-center gap-3 transition-all mb-6 shadow-sm"
         aria-label="Go back"
       >
         <ArrowLeft className={`w-6 h-6 ${isRTL ? 'rotate-180' : ''}`} aria-hidden="true" />
         <span>{t('makeAnotherQR')}</span>
       </button>
 
-      <div className="bg-green-50 border-l-4 border-green-600 p-6 mb-8 rounded-lg">
-        <h2 className="text-2xl font-bold text-green-900 mb-3">
-          {t('qrReady')}
-        </h2>
-        <p className="text-lg text-green-800 leading-relaxed">
-          {t('qrReadyInstructions')}
-        </p>
-      </div>
-
-      <VoiceButton
-        text={t('voiceInstructionsQR')}
-        language={language}
-      />
-
-      <div className="bg-white rounded-2xl p-10 shadow-lg border border-gray-200 mt-8">
-        <div className="text-center mb-8">
-          <h3 className="text-3xl font-bold text-gray-900 mb-3 leading-tight">
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
+        <div className="text-center mb-6">
+          <h3 className="text-2xl font-bold text-gray-900 mb-2 leading-tight">
             {paymentInfo.name}
           </h3>
-          <p className="text-xl text-gray-700">
-            {t('digitalDonationQR')}
-          </p>
         </div>
 
-        <div className="bg-gray-50 p-8 rounded-xl border-2 border-gray-200 mb-8">
+        <div className="grid grid-cols-1 gap-3 mb-6">
+          <button
+            onClick={downloadForPrint}
+            className="min-h-[70px] bg-green-700 text-white py-5 px-6 rounded-xl text-xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg flex items-center justify-center gap-4"
+          >
+            <Download className="w-8 h-8" aria-hidden="true" />
+            {t('downloadToPrint')}
+          </button>
+
+          <button
+            onClick={shareDigital}
+            className="min-h-[65px] bg-white text-gray-800 py-4 px-5 rounded-xl text-lg font-bold border-3 border-gray-300 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors flex items-center justify-center gap-3"
+          >
+            <Share2 className="w-7 h-7" aria-hidden="true" />
+            {t('shareDigitalCopy')}
+          </button>
+        </div>
+
+        {showShareTip && (
+          <div className="mb-6 bg-yellow-50 border border-yellow-300 rounded-lg p-4">
+            <p className="text-yellow-900 text-sm">
+              {t('shareTip')}
+            </p>
+          </div>
+        )}
+
+        <div className="bg-gray-50 p-6 rounded-xl border-2 border-gray-200 mb-6">
           {qrDataUrl && (
             <img
               src={qrDataUrl}
@@ -215,79 +211,29 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
           )}
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
-          <h4 className="text-xl font-bold text-blue-900 mb-3">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+          <h4 className="text-lg font-bold text-blue-900 mb-3">
             {t('howItWorks')}
           </h4>
-          <ol className="space-y-3 text-lg text-blue-900">
-            <li className="flex gap-3">
+          <ol className="space-y-2 text-base text-blue-900">
+            <li className="flex gap-2">
               <span className="font-bold flex-shrink-0">1.</span>
               <span>{t('step1Print')}</span>
             </li>
-            <li className="flex gap-3">
+            <li className="flex gap-2">
               <span className="font-bold flex-shrink-0">2.</span>
               <span>{t('step2Laminate')}</span>
             </li>
-            <li className="flex gap-3">
+            <li className="flex gap-2">
               <span className="font-bold flex-shrink-0">3.</span>
               <span>{t('step3Attach')}</span>
             </li>
-            <li className="flex gap-3">
+            <li className="flex gap-2">
               <span className="font-bold flex-shrink-0">4.</span>
               <span>{t('step4Scan')}</span>
             </li>
           </ol>
         </div>
-
-        <div className="grid grid-cols-1 gap-4">
-          <button
-            onClick={downloadForPrint}
-            className="min-h-[80px] bg-green-700 text-white py-6 px-8 rounded-xl text-2xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg flex items-center justify-center gap-4"
-          >
-            <Download className="w-10 h-10" aria-hidden="true" />
-            {t('downloadToPrint')}
-          </button>
-
-          <button
-            onClick={shareDigital}
-            className="min-h-[70px] bg-white text-gray-800 py-5 px-6 rounded-xl text-xl font-bold border-3 border-gray-300 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors flex items-center justify-center gap-3"
-          >
-            <Share2 className="w-8 h-8" aria-hidden="true" />
-            {t('shareDigitalCopy')}
-          </button>
-        </div>
-
-        {showShareTip && (
-          <div className="mt-6 bg-yellow-50 border border-yellow-300 rounded-lg p-5">
-            <p className="text-yellow-900 text-base">
-              {t('shareTip')}
-            </p>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-8 bg-gray-100 border border-gray-300 rounded-xl p-6">
-        <h4 className="text-lg font-bold text-gray-800 mb-3">
-          {t('importantReminders')}
-        </h4>
-        <ul className="space-y-2 text-gray-700">
-          <li className="flex gap-2">
-            <span>•</span>
-            <span>{t('reminder1')}</span>
-          </li>
-          <li className="flex gap-2">
-            <span>•</span>
-            <span>{t('reminder2')}</span>
-          </li>
-          <li className="flex gap-2">
-            <span>•</span>
-            <span>{t('reminder3')}</span>
-          </li>
-          <li className="flex gap-2">
-            <span>•</span>
-            <span>{t('reminder4')}</span>
-          </li>
-        </ul>
       </div>
 
       <canvas ref={canvasRef} style={{ display: 'none' }} width="800" height="1100" aria-hidden="true" />

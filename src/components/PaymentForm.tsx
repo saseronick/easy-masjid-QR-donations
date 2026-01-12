@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Smartphone } from 'lucide-react';
 import { PaymentMethod, PaymentInfo, Language } from '../types';
 import { translations } from '../data/translations';
-import VoiceButton from './VoiceButton';
 
 interface PaymentFormProps {
   language: Language;
@@ -41,21 +40,10 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
 
   return (
     <div className={`max-w-3xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
-      <div className="bg-blue-50 border-l-4 border-blue-600 p-6 mb-8 rounded-lg">
-        <p className="text-lg text-blue-900 font-medium leading-relaxed">
-          {t('cashContext')}
-        </p>
-      </div>
-
-      <VoiceButton
-        text={t('voiceInstructionsForm')}
-        language={language}
-      />
-
-      <form onSubmit={handleSubmit} className="space-y-8 mt-8" noValidate>
-        <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
+      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
           <fieldset className="border-0 p-0 m-0">
-            <legend className="block text-2xl font-bold text-gray-900 mb-6">
+            <legend className="block text-xl font-bold text-gray-900 mb-4">
               {t('step1Question')}
             </legend>
             <div className="grid grid-cols-1 gap-4">
@@ -69,14 +57,14 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
                     aria-pressed={method === pm.id}
                     role="radio"
                     aria-checked={method === pm.id}
-                    className={`min-h-[80px] p-6 rounded-xl border-3 transition-all flex items-center gap-4 ${isRTL ? 'text-right' : 'text-left'} ${
+                    className={`min-h-[70px] p-5 rounded-xl border-3 transition-all flex items-center gap-4 ${isRTL ? 'text-right' : 'text-left'} ${
                       method === pm.id
                         ? 'border-green-700 bg-green-700 text-white shadow-lg'
                         : 'border-gray-300 bg-white text-gray-900 hover:border-green-600 hover:bg-green-50'
                     }`}
                   >
-                    <Icon className="w-12 h-12 flex-shrink-0" aria-hidden="true" />
-                    <span className="text-2xl font-bold">{pm.label}</span>
+                    <Icon className="w-10 h-10 flex-shrink-0" aria-hidden="true" />
+                    <span className="text-xl font-bold">{pm.label}</span>
                   </button>
                 );
               })}
@@ -84,13 +72,10 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
           </fieldset>
         </div>
 
-        <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-          <label htmlFor="payment-identifier" className="block text-2xl font-bold text-gray-900 mb-4">
+        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <label htmlFor="payment-identifier" className="block text-xl font-bold text-gray-900 mb-3">
             {t('step2Mobile')}
           </label>
-          <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-            {method === 'jazzcash' ? t('jazzcashNumberHelp') : t('easypaisaNumberHelp')}
-          </p>
           <input
             id="payment-identifier"
             type="tel"
@@ -100,18 +85,15 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             aria-required="true"
             aria-invalid={!identifier.trim() && error ? 'true' : 'false'}
             placeholder="03001234567"
-            className="w-full px-6 py-5 text-2xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors"
+            className="w-full px-5 py-4 text-xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors"
             dir="ltr"
           />
         </div>
 
-        <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-          <label htmlFor="organization-name" className="block text-2xl font-bold text-gray-900 mb-4">
+        <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <label htmlFor="organization-name" className="block text-xl font-bold text-gray-900 mb-3">
             {t('step3Masjid')}
           </label>
-          <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-            {t('masjidNameHelp')}
-          </p>
           <input
             id="organization-name"
             type="text"
@@ -121,7 +103,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             aria-required="true"
             aria-invalid={!name.trim() && error ? 'true' : 'false'}
             placeholder="Masjid Al-Noor"
-            className={`w-full px-6 py-5 text-2xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors ${
+            className={`w-full px-5 py-4 text-xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors ${
               isRTL ? 'text-right' : 'text-left'
             }`}
             dir={isRTL ? 'rtl' : 'ltr'}
@@ -136,7 +118,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
 
         <button
           type="submit"
-          className="w-full min-h-[80px] bg-green-700 text-white py-6 px-8 rounded-xl text-2xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg"
+          className="w-full min-h-[70px] bg-green-700 text-white py-5 px-6 rounded-xl text-xl font-bold hover:bg-green-800 focus:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-colors shadow-lg"
         >
           {t('createQRButton')}
         </button>
