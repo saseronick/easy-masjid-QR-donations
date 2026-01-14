@@ -785,8 +785,8 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
                 >
                   {submitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Adding...</span>
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span className="font-bold">Saving... Please wait</span>
                     </>
                   ) : (
                     'Add Donation'
@@ -955,8 +955,8 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
                 >
                   {submitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Adding...</span>
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span className="font-bold">Saving... Please wait</span>
                     </>
                   ) : (
                     'Add Expense'

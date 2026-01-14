@@ -263,9 +263,16 @@ export default function Login({ onCancel }: LoginProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full min-h-[50px] bg-green-700 text-white py-3 px-4 rounded-lg hover:bg-green-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full min-h-[50px] bg-green-700 text-white py-3 px-4 rounded-lg hover:bg-green-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
           >
-            {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Sign In'}
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span className="font-bold">Please wait...</span>
+              </>
+            ) : (
+              isSignUp ? 'Sign Up' : 'Sign In'
+            )}
           </button>
 
           <div className="text-center">

@@ -10,6 +10,7 @@ import NewAdminPanel from './components/NewAdminPanel';
 import NetworkStatus from './components/NetworkStatus';
 import SyncStatus from './components/SyncStatus';
 import QRHistory from './components/QRHistory';
+import LoadingSpinner from './components/LoadingSpinner';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
 import { syncQueue } from './services/syncQueue';
@@ -67,7 +68,7 @@ function App() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading...</div>
+        <LoadingSpinner size="lg" text="Loading your account..." />
       </div>
     );
   }

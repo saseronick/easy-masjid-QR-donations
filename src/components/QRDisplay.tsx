@@ -20,6 +20,8 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
   const [showAccountPrompt, setShowAccountPrompt] = useState(true);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isFromCache, setIsFromCache] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(true);
+  const [generationProgress, setGenerationProgress] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
@@ -54,18 +56,27 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
   useEffect(() => {
     const generateQRs = async () => {
       try {
+        setIsGenerating(true);
+        setGenerationProgress(0);
+
         const paymentUrl = generatePaymentUrl();
         const cacheId = `${paymentInfo.method}-${paymentInfo.identifier.replace(/\D/g, '')}`;
+
+        setGenerationProgress(20);
 
         const cachedQR = localStorage.getItem(`qr-${cacheId}`);
         if (cachedQR) {
           setQrDataUrl(cachedQR);
           setIsFromCache(true);
+          setGenerationProgress(60);
           await generatePrintQR(paymentUrl, cacheId);
+          setGenerationProgress(100);
+          setIsGenerating(false);
           return;
         }
         setIsFromCache(false);
 
+        setGenerationProgress(40);
         const dataUrl = await QRCode.toDataURL(paymentUrl, {
           width: 350,
           margin: 3,
@@ -76,6 +87,7 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
         });
         setQrDataUrl(dataUrl);
 
+        setGenerationProgress(60);
         localStorage.setItem(`qr-${cacheId}`, dataUrl);
 
         const uniqueId = `${cacheId}-${Date.now()}`;
@@ -91,11 +103,15 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
           created_at: new Date().toISOString(),
         };
 
+        setGenerationProgress(80);
         await db.addPaymentInfo(paymentData);
 
         await generatePrintQR(paymentUrl, cacheId);
+        setGenerationProgress(100);
+        setIsGenerating(false);
       } catch (error) {
         console.error('Error generating QR code:', error);
+        setIsGenerating(false);
       }
     };
 
@@ -209,6 +225,44 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
       setShowShareTip(true);
     }
   };
+
+  if (isGenerating) {
+    return (
+      <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-gray-300 border-t-green-700 rounded-full animate-spin mx-auto mb-6"></div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              {t('generatingQR') || (language === 'ur' ? 'QR کوڈ بنایا جا رہا ہے...' : 'Generating QR Code...')}
+            </h3>
+            <p className="text-xl text-gray-600 font-medium mb-6">
+              {language === 'ur' ? 'برائے مہربانی انتظار کریں' : 'Please wait...'}
+            </p>
+
+            <div className="max-w-md mx-auto">
+              <div className="bg-gray-200 rounded-full h-4 overflow-hidden mb-3">
+                <div
+                  className="bg-green-700 h-full transition-all duration-300 rounded-full"
+                  style={{ width: `${generationProgress}%` }}
+                ></div>
+              </div>
+              <p className="text-lg text-gray-700 font-bold">
+                {generationProgress}% {language === 'ur' ? 'مکمل' : 'Complete'}
+              </p>
+            </div>
+
+            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <p className="text-base text-blue-900">
+                {language === 'ur'
+                  ? 'آپ کا QR کوڈ تیار ہو رہا ہے۔ یہ صرف چند سیکنڈ میں مکمل ہو جائے گا۔'
+                  : 'Your QR code is being prepared. This will only take a few seconds.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>

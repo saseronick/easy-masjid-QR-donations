@@ -46,16 +46,10 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
         : 'Invalid characters - use numbers only';
     }
 
-    if (cleaned.length < 11) {
+    if (cleaned.length !== 11) {
       return language === 'ur'
         ? `پاکستانی موبائل نمبر 11 ہندسے کا ہونا چاہیے (آپ نے ${cleaned.length} درج کیے)`
-        : `Pakistani mobile numbers must be 11 digits (you entered ${cleaned.length})`;
-    }
-
-    if (cleaned.length > 15) {
-      return language === 'ur'
-        ? `زیادہ سے زیادہ 15 نمبر (آپ نے ${cleaned.length} درج کیے)`
-        : `Maximum 15 digits allowed (you entered ${cleaned.length})`;
+        : `Pakistani mobile numbers must be exactly 11 digits (you entered ${cleaned.length})`;
     }
 
     if (!cleaned.startsWith('0')) {
