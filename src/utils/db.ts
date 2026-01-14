@@ -1,5 +1,5 @@
 const DB_NAME = 'DonationPlatformDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export interface DBDonation {
   id: string;
@@ -43,6 +43,19 @@ export interface DBOrganization {
   jazzcash_account?: string;
   synced: boolean;
   last_synced?: string;
+}
+
+export interface DBPaymentInfo {
+  id: string;
+  organizationName: string;
+  amount: number;
+  purpose: string;
+  qrCodeData: string;
+  paymentMethod: string;
+  raastId?: string;
+  phoneNumber?: string;
+  accountNumber?: string;
+  created_at: string;
 }
 
 class IndexedDBService {
@@ -96,6 +109,11 @@ class IndexedDBService {
           const syncStore = db.createObjectStore('syncQueue', { keyPath: 'id', autoIncrement: true });
           syncStore.createIndex('timestamp', 'timestamp', { unique: false });
           syncStore.createIndex('type', 'type', { unique: false });
+        }
+
+        if (!db.objectStoreNames.contains('paymentInfo')) {
+          const paymentStore = db.createObjectStore('paymentInfo', { keyPath: 'id' });
+          paymentStore.createIndex('created_at', 'created_at', { unique: false });
         }
       };
     });
@@ -269,10 +287,51 @@ class IndexedDBService {
     });
   }
 
+  async addPaymentInfo(paymentInfo: DBPaymentInfo): Promise<void> {
+    const db = await this.init();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['paymentInfo'], 'readwrite');
+      const store = transaction.objectStore('paymentInfo');
+      const request = store.put(paymentInfo);
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async getPaymentInfo(id: string): Promise<DBPaymentInfo | null> {
+    const db = await this.init();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['paymentInfo'], 'readonly');
+      const store = transaction.objectStore('paymentInfo');
+      const request = store.get(id);
+
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async getAllPaymentInfo(): Promise<DBPaymentInfo[]> {
+    const db = await this.init();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['paymentInfo'], 'readonly');
+      const store = transaction.objectStore('paymentInfo');
+      const request = store.getAll();
+
+      request.onsuccess = () => {
+        const payments = request.result.sort((a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        resolve(payments);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
   async clearAllData(): Promise<void> {
     const db = await this.init();
     return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['donations', 'expenses', 'organizations', 'syncQueue'], 'readwrite');
+      const transaction = db.transaction(['donations', 'expenses', 'organizations', 'syncQueue', 'paymentInfo'], 'readwrite');
 
       const promises = [
         new Promise((res, rej) => {
@@ -292,6 +351,11 @@ class IndexedDBService {
         }),
         new Promise((res, rej) => {
           const req = transaction.objectStore('syncQueue').clear();
+          req.onsuccess = () => res(undefined);
+          req.onerror = () => rej(req.error);
+        }),
+        new Promise((res, rej) => {
+          const req = transaction.objectStore('paymentInfo').clear();
           req.onsuccess = () => res(undefined);
           req.onerror = () => rej(req.error);
         })

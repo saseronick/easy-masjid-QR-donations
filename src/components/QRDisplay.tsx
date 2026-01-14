@@ -4,6 +4,7 @@ import QRCode from 'qrcode';
 import { PaymentInfo, Language } from '../types';
 import { translations } from '../data/translations';
 import AccountPrompt from './AccountPrompt';
+import { db, DBPaymentInfo } from '../utils/db';
 
 interface QRDisplayProps {
   paymentInfo: PaymentInfo;
@@ -39,16 +40,12 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
     const generateQRs = async () => {
       try {
         const paymentUrl = generatePaymentUrl();
-        const cacheKey = `qr-${paymentInfo.method}-${paymentInfo.identifier}`;
+        const id = `${paymentInfo.method}-${paymentInfo.identifier}-${Date.now()}`;
 
-        const cachedQR = localStorage.getItem(cacheKey);
-        if (cachedQR) {
-          setQrDataUrl(cachedQR);
-          const cachedPrint = localStorage.getItem(`${cacheKey}-print`);
-          if (cachedPrint) {
-            setQrPrintDataUrl(cachedPrint);
-            return;
-          }
+        const existingPayment = await db.getPaymentInfo(id);
+        if (existingPayment) {
+          setQrDataUrl(existingPayment.qrCodeData);
+          return;
         }
 
         const dataUrl = await QRCode.toDataURL(paymentUrl, {
@@ -60,9 +57,22 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
           }
         });
         setQrDataUrl(dataUrl);
-        localStorage.setItem(cacheKey, dataUrl);
 
-        await generatePrintQR(paymentUrl, cacheKey);
+        const paymentData: DBPaymentInfo = {
+          id,
+          organizationName: paymentInfo.name,
+          amount: 0,
+          purpose: 'Donation',
+          qrCodeData: dataUrl,
+          paymentMethod: paymentInfo.method,
+          raastId: paymentInfo.method === 'raast' ? paymentInfo.identifier : undefined,
+          phoneNumber: paymentInfo.identifier,
+          created_at: new Date().toISOString(),
+        };
+
+        await db.addPaymentInfo(paymentData);
+
+        await generatePrintQR(paymentUrl, id);
       } catch (error) {
         console.error('Error generating QR code:', error);
       }

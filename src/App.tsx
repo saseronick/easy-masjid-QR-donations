@@ -7,6 +7,7 @@ import Login from './components/Login';
 import NewAdminPanel from './components/NewAdminPanel';
 import NetworkStatus from './components/NetworkStatus';
 import SyncStatus from './components/SyncStatus';
+import QRHistory from './components/QRHistory';
 import { AccessibilityReport } from './components/AccessibilityReport';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
@@ -22,6 +23,7 @@ function App() {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showReport, setShowReport] = useState(false);
+  const [showQRHistory, setShowQRHistory] = useState(false);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
@@ -64,6 +66,10 @@ function App() {
     return <AccessibilityReport />;
   }
 
+  if (showQRHistory) {
+    return <QRHistory language={language} onClose={() => setShowQRHistory(false)} />;
+  }
+
   if (showAdmin) {
     if (!user) {
       return <Login />;
@@ -77,7 +83,13 @@ function App() {
       <SyncStatus />
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {/* Admin Link */}
-        <div className="flex justify-end gap-4 mb-4">
+        <div className="flex justify-end gap-4 mb-4 flex-wrap">
+          <button
+            onClick={() => setShowQRHistory(true)}
+            className="text-sm text-gray-600 hover:text-gray-900 underline py-2 px-3 min-h-[44px]"
+          >
+            View QR History
+          </button>
           <button
             onClick={() => setShowReport(true)}
             className="text-sm text-gray-600 hover:text-gray-900 underline py-2 px-3 min-h-[44px]"
