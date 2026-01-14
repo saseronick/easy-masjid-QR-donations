@@ -257,12 +257,6 @@ export default function Login({ onCancel }: LoginProps) {
             </button>
           </div>
         </form>
-
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-600 text-center">
-            For donation page, visit the main site
-          </p>
-        </div>
       </div>
     </div>
   );
