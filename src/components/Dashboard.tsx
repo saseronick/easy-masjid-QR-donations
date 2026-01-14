@@ -162,7 +162,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
         <div className="mb-8">
           <button
             onClick={onBack}
-            className="text-gray-600 hover:text-gray-900 mb-4"
+            className="text-gray-600 hover:text-gray-900 mb-4 py-2 px-3 min-h-[44px]"
           >
             ← Back to Organizations
           </button>
@@ -203,7 +203,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
             <div className="flex gap-4">
               <button
                 onClick={() => setActiveTab('donations')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-4 py-3 min-h-[50px] rounded-lg font-medium transition-colors ${
                   activeTab === 'donations'
                     ? 'bg-green-700 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -213,7 +213,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               </button>
               <button
                 onClick={() => setActiveTab('expenses')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-4 py-3 min-h-[50px] rounded-lg font-medium transition-colors ${
                   activeTab === 'expenses'
                     ? 'bg-red-700 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -224,7 +224,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
             </div>
             <button
               onClick={exportReport}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 min-h-[50px] bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Download className="w-5 h-5" />
               Export Report
@@ -236,7 +236,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               {!showDonationForm && (
                 <button
                   onClick={() => setShowDonationForm(true)}
-                  className="mb-4 flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors"
+                  className="mb-4 flex items-center gap-2 px-4 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors"
                 >
                   <Plus className="w-5 h-5" />
                   Log Donation
@@ -300,14 +300,14 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                   <div className="flex gap-3 mt-4">
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800"
+                      className="px-4 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800"
                     >
                       Add Donation
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowDonationForm(false)}
-                      className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
+                      className="px-4 py-3 min-h-[50px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
                     >
                       Cancel
                     </button>
@@ -346,7 +346,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               {!showExpenseForm && (
                 <button
                   onClick={() => setShowExpenseForm(true)}
-                  className="mb-4 flex items-center gap-2 px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
+                  className="mb-4 flex items-center gap-2 px-4 py-3 min-h-[50px] bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
                 >
                   <Plus className="w-5 h-5" />
                   Log Expense
@@ -411,14 +411,14 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                   <div className="flex gap-3 mt-4">
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800"
+                      className="px-4 py-3 min-h-[50px] bg-red-700 text-white rounded-lg hover:bg-red-800"
                     >
                       Add Expense
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowExpenseForm(false)}
-                      className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
+                      className="px-4 py-3 min-h-[50px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
                     >
                       Cancel
                     </button>

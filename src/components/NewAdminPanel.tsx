@@ -90,7 +90,7 @@ export default function NewAdminPanel() {
           </div>
           <button
             onClick={signOut}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-3 min-h-[50px] bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
             <LogOut className="w-5 h-5" />
             Sign Out
@@ -100,7 +100,7 @@ export default function NewAdminPanel() {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="mb-6 flex items-center gap-2 px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+            className="mb-6 flex items-center gap-2 px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
           >
             <Plus className="w-5 h-5" />
             Add Mosque
@@ -158,7 +158,7 @@ export default function NewAdminPanel() {
               <div className="flex gap-3">
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+                  className="px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
                 >
                   Create Mosque
                 </button>
@@ -172,7 +172,7 @@ export default function NewAdminPanel() {
                       raast_phone_number: '',
                     });
                   }}
-                  className="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                  className="px-6 py-3 min-h-[50px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                 >
                   Cancel
                 </button>
@@ -196,7 +196,7 @@ export default function NewAdminPanel() {
                 </div>
                 <button
                   onClick={() => setSelectedOrg(org)}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors"
+                  className="flex items-center gap-2 px-4 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors"
                 >
                   <Eye className="w-4 h-4" />
                   View Dashboard
@@ -211,7 +211,7 @@ export default function NewAdminPanel() {
             <p className="text-gray-600 text-lg mb-4">No mosques registered yet</p>
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
             >
               <Plus className="w-5 h-5" />
               Add Your First Mosque

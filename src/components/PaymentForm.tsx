@@ -18,18 +18,82 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
   const [method, setMethod] = useState<PaymentMethod>('raast');
   const [identifier, setIdentifier] = useState('');
   const [name, setName] = useState('');
-  const [error, setError] = useState('');
+  const [identifierError, setIdentifierError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [identifierTouched, setIdentifierTouched] = useState(false);
+  const [nameTouched, setNameTouched] = useState(false);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
   const paymentMethods = getPaymentMethods(language);
 
+  const validatePhone = (phone: string): string => {
+    if (!phone.trim()) {
+      return language === 'ur' ? 'فون نمبر درج کریں' : 'Phone number is required';
+    }
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length < 10) {
+      return language === 'ur' ? 'فون نمبر بہت چھوٹا ہے' : 'Phone number is too short';
+    }
+    if (cleaned.length > 15) {
+      return language === 'ur' ? 'فون نمبر بہت لمبا ہے' : 'Phone number is too long';
+    }
+    if (cleaned.length === 11 && !cleaned.startsWith('0')) {
+      return language === 'ur' ? 'فون نمبر 0 سے شروع ہونا چاہیے' : 'Phone number should start with 0';
+    }
+    return '';
+  };
+
+  const validateName = (orgName: string): string => {
+    if (!orgName.trim()) {
+      return language === 'ur' ? 'نام درج کریں' : 'Organization name is required';
+    }
+    if (orgName.trim().length < 3) {
+      return language === 'ur' ? 'نام بہت چھوٹا ہے' : 'Name is too short (minimum 3 characters)';
+    }
+    if (orgName.trim().length > 100) {
+      return language === 'ur' ? 'نام بہت لمبا ہے' : 'Name is too long (maximum 100 characters)';
+    }
+    return '';
+  };
+
+  const handleIdentifierChange = (value: string) => {
+    setIdentifier(value);
+    if (identifierTouched) {
+      setIdentifierError(validatePhone(value));
+    }
+  };
+
+  const handleNameChange = (value: string) => {
+    setName(value);
+    if (nameTouched) {
+      setNameError(validateName(value));
+    }
+  };
+
+  const handleIdentifierBlur = () => {
+    setIdentifierTouched(true);
+    setIdentifierError(validatePhone(identifier));
+  };
+
+  const handleNameBlur = () => {
+    setNameTouched(true);
+    setNameError(validateName(name));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
-    if (!name.trim() || !identifier.trim()) {
-      setError(t('error'));
+    setIdentifierTouched(true);
+    setNameTouched(true);
+
+    const phoneError = validatePhone(identifier);
+    const orgNameError = validateName(name);
+
+    setIdentifierError(phoneError);
+    setNameError(orgNameError);
+
+    if (phoneError || orgNameError) {
       return;
     }
 
@@ -84,14 +148,25 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             id="payment-identifier"
             type="tel"
             value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
+            onChange={(e) => handleIdentifierChange(e.target.value)}
+            onBlur={handleIdentifierBlur}
             required
             aria-required="true"
-            aria-invalid={!identifier.trim() && error ? 'true' : 'false'}
+            aria-invalid={identifierError ? 'true' : 'false'}
+            aria-describedby={identifierError ? 'identifier-error' : undefined}
             placeholder="03001234567"
-            className="w-full px-5 py-4 text-xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors"
+            className={`w-full px-5 py-4 text-xl border-3 rounded-xl focus:outline-none focus:ring-4 transition-colors ${
+              identifierError
+                ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                : 'border-gray-300 focus:border-green-700 focus:ring-green-200'
+            }`}
             dir="ltr"
           />
+          {identifierError && (
+            <p id="identifier-error" className="mt-2 text-red-700 text-base font-medium" role="alert">
+              {identifierError}
+            </p>
+          )}
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
@@ -102,23 +177,26 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             id="organization-name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
+            onBlur={handleNameBlur}
             required
             aria-required="true"
-            aria-invalid={!name.trim() && error ? 'true' : 'false'}
+            aria-invalid={nameError ? 'true' : 'false'}
+            aria-describedby={nameError ? 'name-error' : undefined}
             placeholder={t('masjidNamePlaceholder')}
-            className={`w-full px-5 py-4 text-xl border-3 border-gray-300 rounded-xl focus:outline-none focus:border-green-700 focus:ring-4 focus:ring-green-200 transition-colors ${
-              isRTL ? 'text-right' : 'text-left'
-            }`}
+            className={`w-full px-5 py-4 text-xl border-3 rounded-xl focus:outline-none focus:ring-4 transition-colors ${
+              nameError
+                ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                : 'border-gray-300 focus:border-green-700 focus:ring-green-200'
+            } ${isRTL ? 'text-right' : 'text-left'}`}
             dir={isRTL ? 'rtl' : 'ltr'}
           />
+          {nameError && (
+            <p id="name-error" className="mt-2 text-red-700 text-base font-medium" role="alert">
+              {nameError}
+            </p>
+          )}
         </div>
-
-        {error && (
-          <div className="bg-red-50 border-3 border-red-600 rounded-xl p-6" role="alert" aria-live="polite" aria-atomic="true">
-            <p className="text-red-900 text-xl font-bold text-center">{error}</p>
-          </div>
-        )}
 
         <button
           type="submit"

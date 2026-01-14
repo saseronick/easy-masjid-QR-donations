@@ -89,7 +89,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full min-h-[50px] bg-green-700 text-white py-3 px-4 rounded-lg hover:bg-green-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Sign In'}
           </button>
@@ -101,7 +101,7 @@ export default function Login() {
                 setIsSignUp(!isSignUp);
                 setError('');
               }}
-              className="text-green-700 hover:text-green-800 text-sm font-medium"
+              className="text-green-700 hover:text-green-800 text-sm font-medium py-3 px-4 min-h-[44px]"
             >
               {isSignUp
                 ? 'Already have an account? Sign in'

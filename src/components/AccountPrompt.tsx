@@ -16,10 +16,10 @@ export default function AccountPrompt({ language, onSignUp, onDismiss }: Account
     <div className={`bg-gradient-to-br from-blue-50 to-green-50 border-2 border-blue-300 rounded-xl p-6 relative ${isRTL ? 'rtl' : 'ltr'}`}>
       <button
         onClick={onDismiss}
-        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+        className="absolute top-2 right-2 p-2 min-h-[44px] min-w-[44px] text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 flex items-center justify-center"
         aria-label="Dismiss"
       >
-        <X className="w-5 h-5" />
+        <X className="w-6 h-6" />
       </button>
 
       <div className="flex items-start gap-4">
@@ -49,7 +49,7 @@ export default function AccountPrompt({ language, onSignUp, onDismiss }: Account
 
           <button
             onClick={onSignUp}
-            className="w-full bg-blue-700 text-white py-3 px-6 rounded-lg text-lg font-bold hover:bg-blue-800 transition-colors shadow-md"
+            className="w-full min-h-[56px] bg-blue-700 text-white py-3 px-6 rounded-lg text-lg font-bold hover:bg-blue-800 transition-colors shadow-md"
           >
             {t('createAccountButton')}
           </button>

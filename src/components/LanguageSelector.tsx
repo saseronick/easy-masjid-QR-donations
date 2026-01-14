@@ -17,31 +17,55 @@ export default function LanguageSelector({ currentLanguage, onLanguageChange }: 
   const t = (key: string) => translations[key]?.[currentLanguage] || translations[key]?.en || key;
   const isRTL = currentLanguage === 'ar' || currentLanguage === 'ur' || currentLanguage === 'ps' || currentLanguage === 'sd';
 
+  const handleKeyDown = (e: React.KeyboardEvent, langCode: Language) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onLanguageChange(langCode);
+    }
+
+    const currentIndex = languages.findIndex(l => l.code === langCode);
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = (currentIndex + 1) % languages.length;
+      const nextButton = document.querySelector(`[data-lang="${languages[nextIndex].code}"]`) as HTMLButtonElement;
+      nextButton?.focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = (currentIndex - 1 + languages.length) % languages.length;
+      const prevButton = document.querySelector(`[data-lang="${languages[prevIndex].code}"]`) as HTMLButtonElement;
+      prevButton?.focus();
+    }
+  };
+
   return (
-    <div className="mb-10" role="group" aria-labelledby="language-selector-label">
+    <div className="mb-10" role="radiogroup" aria-labelledby="language-selector-label">
       <h2 id="language-selector-label" className="text-2xl font-bold text-gray-800 mb-6 text-center">
         {t('chooseLanguage')} / {translations['chooseLanguage']['ur']}
       </h2>
       <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto">
         {languages.map((lang) => {
           const hasEnglishInLabel = /[A-Za-z]/.test(lang.nativeName);
+          const isSelected = currentLanguage === lang.code;
           return (
             <button
               key={lang.code}
+              data-lang={lang.code}
               onClick={() => onLanguageChange(lang.code)}
-              aria-pressed={currentLanguage === lang.code}
-              aria-label={`Switch to ${lang.name}`}
+              onKeyDown={(e) => handleKeyDown(e, lang.code)}
               role="radio"
-              aria-describedby={`${lang.code}-description`}
-              className={`min-h-[70px] px-6 py-5 rounded-xl text-xl font-bold transition-all border-3 ${
-                currentLanguage === lang.code
+              aria-checked={isSelected}
+              aria-label={`${lang.name} - ${lang.nativeName}`}
+              tabIndex={isSelected ? 0 : -1}
+              className={`min-h-[70px] px-6 py-5 rounded-xl text-xl font-bold transition-all border-3 focus:outline-none focus:ring-4 focus:ring-green-300 ${
+                isSelected
                   ? 'bg-green-700 text-white border-green-700 shadow-lg'
                   : 'text-gray-800 bg-white border-gray-400 hover:border-green-600 hover:bg-green-50 active:bg-green-100'
               } ${hasEnglishInLabel && isRTL ? 'atkinson-font' : ''}`}
             >
               {lang.nativeName}
-              <span id={`${lang.code}-description`} className="sr-only">
-                {lang.name} language option
+              <span className="sr-only">
+                {isSelected ? ' (selected)' : ''}
               </span>
             </button>
           );

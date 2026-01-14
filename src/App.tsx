@@ -5,6 +5,7 @@ import PaymentForm from './components/PaymentForm';
 import QRDisplay from './components/QRDisplay';
 import Login from './components/Login';
 import NewAdminPanel from './components/NewAdminPanel';
+import { AccessibilityReport } from './components/AccessibilityReport';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
 
@@ -14,6 +15,7 @@ function App() {
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
@@ -39,6 +41,10 @@ function App() {
     );
   }
 
+  if (showReport) {
+    return <AccessibilityReport />;
+  }
+
   if (showAdmin) {
     if (!user) {
       return <Login />;
@@ -50,10 +56,16 @@ function App() {
     <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`} lang={language}>
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {/* Admin Link */}
-        <div className="text-right mb-4">
+        <div className="flex justify-end gap-4 mb-4">
+          <button
+            onClick={() => setShowReport(true)}
+            className="text-sm text-gray-600 hover:text-gray-900 underline py-2 px-3 min-h-[44px]"
+          >
+            Accessibility Report
+          </button>
           <button
             onClick={() => setShowAdmin(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 underline"
+            className="text-sm text-gray-600 hover:text-gray-900 underline py-2 px-3 min-h-[44px]"
           >
             Admin Panel
           </button>

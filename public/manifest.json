@@ -1,0 +1,27 @@
+{
+  "name": "Pakistan Donation Platform",
+  "short_name": "Donations",
+  "description": "Free QR code donation platform for mosques and charities in Pakistan",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#15803d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "utilities", "social"],
+  "lang": "en-PK",
+  "dir": "ltr"
+}

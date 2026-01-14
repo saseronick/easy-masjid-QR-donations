@@ -167,7 +167,7 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
     <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
       <button
         onClick={onBack}
-        className="min-h-[60px] px-6 py-4 rounded-xl text-lg font-bold border-3 border-gray-400 bg-white text-gray-800 hover:bg-gray-100 active:bg-gray-200 flex items-center gap-3 transition-all mb-6 shadow-sm"
+        className="min-h-[70px] px-6 py-4 rounded-xl text-lg font-bold border-3 border-gray-400 bg-white text-gray-800 hover:bg-gray-100 active:bg-gray-200 flex items-center gap-3 transition-all mb-6 shadow-sm"
         aria-label="Go back"
       >
         <ArrowLeft className={`w-6 h-6 ${isRTL ? 'rotate-180' : ''}`} aria-hidden="true" />
@@ -192,7 +192,7 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
 
           <button
             onClick={shareDigital}
-            className="min-h-[65px] bg-white text-gray-800 py-4 px-5 rounded-xl text-lg font-bold border-3 border-gray-300 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors flex items-center justify-center gap-3"
+            className="min-h-[70px] bg-white text-gray-800 py-4 px-5 rounded-xl text-lg font-bold border-3 border-gray-300 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors flex items-center justify-center gap-3"
           >
             <Share2 className="w-7 h-7" aria-hidden="true" />
             {t('shareDigitalCopy')}
