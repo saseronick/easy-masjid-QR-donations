@@ -81,7 +81,7 @@ function App() {
     if (!user) {
       return <Login onCancel={() => setShowAdmin(false)} />;
     }
-    return <NewAdminPanel />;
+    return <NewAdminPanel onBackToDonations={() => setShowAdmin(false)} />;
   }
 
   return (

@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, Organization } from '../lib/supabase';
-import { LogOut, Plus, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { LogOut, Plus, Eye, CheckCircle, XCircle, ArrowLeft, Building2 } from 'lucide-react';
 import Dashboard from './Dashboard';
 import { useToast } from '../hooks/useToast';
 import Toast from './Toast';
 
-export default function NewAdminPanel() {
+interface NewAdminPanelProps {
+  onBackToDonations: () => void;
+}
+
+export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps) {
   const { user, signOut } = useAuth();
   const { toasts, showToast, hideToast } = useToast();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
@@ -141,7 +145,13 @@ export default function NewAdminPanel() {
   }
 
   if (selectedOrg) {
-    return <Dashboard organization={selectedOrg} onBack={() => setSelectedOrg(null)} />;
+    return (
+      <Dashboard
+        organization={selectedOrg}
+        onBack={onBackToDonations}
+        onBackToMosques={() => setSelectedOrg(null)}
+      />
+    );
   }
 
   return (
@@ -155,6 +165,15 @@ export default function NewAdminPanel() {
         />
       ))}
       <div className="container mx-auto px-6 py-8 max-w-6xl">
+        <button
+          onClick={onBackToDonations}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 py-2 px-3 min-h-[48px] min-w-[48px] rounded-lg hover:bg-gray-100 transition-colors"
+          aria-label="Back to Donation Page"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back to Donation Page</span>
+        </button>
+
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Mosque Management</h1>
