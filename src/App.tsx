@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
+import { useAuth } from './contexts/AuthContext';
 import LanguageSelector from './components/LanguageSelector';
 import PaymentForm from './components/PaymentForm';
 import QRDisplay from './components/QRDisplay';
+import Login from './components/Login';
+import AdminPanel from './components/AdminPanel';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
 
 function App() {
+  const { user, loading } = useAuth();
   const [language, setLanguage] = useState<Language>('en');
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
@@ -20,9 +25,34 @@ function App() {
     setPaymentInfo(null);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
+  if (showAdmin) {
+    if (!user) {
+      return <Login />;
+    }
+    return <AdminPanel />;
+  }
+
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`} lang={language}>
       <div className="container mx-auto px-6 py-8 max-w-4xl">
+        {/* Admin Link */}
+        <div className="text-right mb-4">
+          <button
+            onClick={() => setShowAdmin(true)}
+            className="text-sm text-gray-600 hover:text-gray-900 underline"
+          >
+            Admin Panel
+          </button>
+        </div>
+
         {/* Header */}
         <header className="text-center mb-10" role="banner">
           <h1 className="text-4xl font-bold text-green-900 mb-4 leading-tight" id="main-heading">
