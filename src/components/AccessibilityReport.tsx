@@ -298,34 +298,127 @@ export function AccessibilityReport() {
 
       <style>{`
         @media print {
+          body, html {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+          }
+
           .no-print {
             display: none !important;
           }
 
           .print-content {
-            font-size: 11pt;
+            font-size: 10pt !important;
+            color: #000 !important;
+            background: #fff !important;
           }
 
           h1 {
-            font-size: 24pt;
+            font-size: 20pt !important;
+            color: #000 !important;
+            margin-bottom: 8pt !important;
           }
 
           h2 {
-            font-size: 18pt;
-            page-break-after: avoid;
+            font-size: 14pt !important;
+            page-break-after: avoid !important;
+            color: #000 !important;
+            margin-top: 12pt !important;
+            margin-bottom: 6pt !important;
           }
 
           h3 {
-            font-size: 14pt;
-            page-break-after: avoid;
+            font-size: 11pt !important;
+            page-break-after: avoid !important;
+            color: #000 !important;
+            font-weight: 600 !important;
+          }
+
+          p, li {
+            font-size: 10pt !important;
+            color: #000 !important;
+            line-height: 1.4 !important;
           }
 
           section {
-            page-break-inside: avoid;
+            page-break-inside: avoid !important;
+            margin-bottom: 12pt !important;
+          }
+
+          .bg-gray-50,
+          .bg-emerald-50,
+          .bg-blue-50,
+          .bg-purple-50 {
+            background-color: #f3f4f6 !important;
+            border: 1px solid #d1d5db !important;
+            padding: 8pt !important;
+          }
+
+          .border-red-600,
+          .border-yellow-600,
+          .border-blue-600 {
+            border-left: 3pt solid #000 !important;
+            padding-left: 8pt !important;
+          }
+
+          .text-red-600,
+          .text-yellow-600,
+          .text-blue-600,
+          .text-emerald-600,
+          .text-gray-600,
+          .text-gray-700,
+          .text-gray-900 {
+            color: #000 !important;
+          }
+
+          .grid {
+            display: grid !important;
+          }
+
+          .grid-cols-4 {
+            grid-template-columns: repeat(4, 1fr) !important;
+          }
+
+          .text-center {
+            text-align: center !important;
+          }
+
+          .font-bold {
+            font-weight: 700 !important;
+          }
+
+          .font-semibold {
+            font-weight: 600 !important;
+          }
+
+          .space-y-6 > * + *,
+          .space-y-4 > * + *,
+          .space-y-2 > * + *,
+          .space-y-1 > * + * {
+            margin-top: 8pt !important;
+          }
+
+          ul {
+            padding-left: 20pt !important;
           }
 
           @page {
-            margin: 1in;
+            margin: 0.6in !important;
+            size: letter !important;
+          }
+
+          svg {
+            display: none !important;
+          }
+
+          .flex {
+            display: block !important;
+          }
+
+          strong {
+            font-weight: 700 !important;
+            color: #000 !important;
           }
         }
       `}</style>

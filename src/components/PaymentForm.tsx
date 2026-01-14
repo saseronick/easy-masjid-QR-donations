@@ -31,16 +31,39 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
     if (!phone.trim()) {
       return language === 'ur' ? 'فون نمبر درج کریں' : 'Phone number is required';
     }
+
     const cleaned = phone.replace(/\D/g, '');
+
+    if (cleaned.length === 0) {
+      return language === 'ur'
+        ? 'صرف نمبر استعمال کریں (0-9)'
+        : 'Please enter numbers only (0-9)';
+    }
+
+    if (phone.trim().length !== cleaned.length && !/^[\d\s\-\+\(\)]+$/.test(phone)) {
+      return language === 'ur'
+        ? 'غلط حروف - صرف نمبر استعمال کریں'
+        : 'Invalid characters - use numbers only';
+    }
+
     if (cleaned.length < 10) {
-      return language === 'ur' ? 'فون نمبر بہت چھوٹا ہے' : 'Phone number is too short';
+      return language === 'ur'
+        ? `کم از کم 10 نمبر درکار ہیں (آپ نے ${cleaned.length} درج کیے)`
+        : `At least 10 digits required (you entered ${cleaned.length})`;
     }
+
     if (cleaned.length > 15) {
-      return language === 'ur' ? 'فون نمبر بہت لمبا ہے' : 'Phone number is too long';
+      return language === 'ur'
+        ? `زیادہ سے زیادہ 15 نمبر (آپ نے ${cleaned.length} درج کیے)`
+        : `Maximum 15 digits allowed (you entered ${cleaned.length})`;
     }
+
     if (cleaned.length === 11 && !cleaned.startsWith('0')) {
-      return language === 'ur' ? 'فون نمبر 0 سے شروع ہونا چاہیے' : 'Phone number should start with 0';
+      return language === 'ur'
+        ? 'پاکستانی نمبر 0 سے شروع ہونا چاہیے (03001234567)'
+        : 'Pakistani numbers should start with 0 (e.g., 03001234567)';
     }
+
     return '';
   };
 
