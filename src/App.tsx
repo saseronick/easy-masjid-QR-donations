@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import LanguageSelector from './components/LanguageSelector';
 import PaymentForm from './components/PaymentForm';
@@ -6,9 +6,11 @@ import QRDisplay from './components/QRDisplay';
 import Login from './components/Login';
 import NewAdminPanel from './components/NewAdminPanel';
 import NetworkStatus from './components/NetworkStatus';
+import SyncStatus from './components/SyncStatus';
 import { AccessibilityReport } from './components/AccessibilityReport';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
+import { syncQueue } from './services/syncQueue';
 
 function App() {
   const { user, loading } = useAuth();
@@ -42,6 +44,14 @@ function App() {
     localStorage.setItem('preferredLanguage', lang);
   };
 
+  useEffect(() => {
+    syncQueue.startAutoSync(5);
+
+    return () => {
+      syncQueue.stopAutoSync();
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -64,6 +74,7 @@ function App() {
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`} lang={language}>
       <NetworkStatus />
+      <SyncStatus />
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {/* Admin Link */}
         <div className="flex justify-end gap-4 mb-4">

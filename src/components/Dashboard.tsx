@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { supabase, Organization, Donation, Expense } from '../lib/supabase';
 import { Plus, Download, X, TrendingUp, TrendingDown, Wallet, Receipt, ArrowLeft } from 'lucide-react';
 import { DashboardSkeleton } from './LoadingSkeleton';
+import { offlineStorage } from '../services/offlineStorage';
+import { syncQueue } from '../services/syncQueue';
+import { DBDonation, DBExpense } from '../utils/db';
 
 interface DashboardProps {
   organization: Organization;
@@ -37,27 +40,40 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
 
   const loadData = async () => {
     try {
-      const [donationsRes, expensesRes] = await Promise.all([
-        supabase
-          .from('donations')
-          .select('*')
-          .eq('organization_id', organization.id)
-          .order('date', { ascending: false }),
-        supabase
-          .from('expenses')
-          .select('*')
-          .eq('organization_id', organization.id)
-          .order('date', { ascending: false }),
-      ]);
+      const offlineDonations = await offlineStorage.getDonationsForOrganization(organization.id);
+      const offlineExpenses = await offlineStorage.getExpensesForOrganization(organization.id);
 
-      if (donationsRes.error) throw donationsRes.error;
-      if (expensesRes.error) throw expensesRes.error;
+      setDonations(offlineDonations as any);
+      setExpenses(offlineExpenses as any);
+      setLoading(false);
 
-      setDonations(donationsRes.data || []);
-      setExpenses(expensesRes.data || []);
+      if (navigator.onLine) {
+        try {
+          const [donationsRes, expensesRes] = await Promise.all([
+            supabase
+              .from('donations')
+              .select('*')
+              .eq('organization_id', organization.id)
+              .order('date', { ascending: false }),
+            supabase
+              .from('expenses')
+              .select('*')
+              .eq('organization_id', organization.id)
+              .order('date', { ascending: false }),
+          ]);
+
+          if (!donationsRes.error && !expensesRes.error) {
+            setDonations(donationsRes.data || []);
+            setExpenses(expensesRes.data || []);
+
+            await offlineStorage.cacheSupabaseData(organization.id);
+          }
+        } catch (error) {
+          console.log('Using offline data due to network error');
+        }
+      }
     } catch (error) {
       console.error('Error loading data:', error);
-    } finally {
       setLoading(false);
     }
   };
@@ -66,7 +82,7 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('donations').insert({
+      const donationData = {
         organization_id: organization.id,
         amount: parseFloat(donationForm.amount),
         donor_name: donationForm.donor_name || 'Anonymous',
@@ -75,9 +91,15 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
         manual_entry: true,
         status: 'completed',
         currency: 'PKR',
-      });
+      };
 
-      if (error) throw error;
+      if (navigator.onLine) {
+        const { error } = await supabase.from('donations').insert(donationData);
+        if (error) throw error;
+      } else {
+        await offlineStorage.saveDonationOffline(donationData, organization.id);
+        await syncQueue.updatePendingCount();
+      }
 
       setShowDonationModal(false);
       setDonationForm({
@@ -99,16 +121,22 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('expenses').insert({
+      const expenseData = {
         organization_id: organization.id,
         amount: parseFloat(expenseForm.amount),
         purpose: expenseForm.purpose,
         notes: expenseForm.notes,
         date: expenseForm.date,
         currency: 'PKR',
-      });
+      };
 
-      if (error) throw error;
+      if (navigator.onLine) {
+        const { error } = await supabase.from('expenses').insert(expenseData);
+        if (error) throw error;
+      } else {
+        await offlineStorage.saveExpenseOffline(expenseData, organization.id);
+        await syncQueue.updatePendingCount();
+      }
 
       setShowExpenseModal(false);
       setExpenseForm({
