@@ -5,6 +5,7 @@ import { DashboardSkeleton } from './LoadingSkeleton';
 import { offlineStorage } from '../services/offlineStorage';
 import { syncQueue } from '../services/syncQueue';
 import { DBDonation, DBExpense } from '../utils/db';
+import { formatCurrency } from '../utils/formatters';
 
 interface DashboardProps {
   organization: Organization;
@@ -229,15 +230,15 @@ ${organization.name} - Financial Report
 Generated: ${new Date().toLocaleDateString()}
 
 SUMMARY
-Total Donations: Rs. ${totalDonations.toLocaleString()}
-Total Expenses: Rs. ${totalExpenses.toLocaleString()}
-Balance: Rs. ${balance.toLocaleString()}
+Total Donations: ${formatCurrency(totalDonations)}
+Total Expenses: ${formatCurrency(totalExpenses)}
+Balance: ${formatCurrency(balance)}
 
 DONATIONS
-${donations.map(d => `${d.date} - Rs. ${parseFloat(d.amount.toString()).toLocaleString()} - ${d.donor_name || 'Anonymous'}${d.notes ? ` (${d.notes})` : ''}`).join('\n')}
+${donations.map(d => `${d.date} - ${formatCurrency(d.amount)} - ${d.donor_name || 'Anonymous'}${d.notes ? ` (${d.notes})` : ''}`).join('\n')}
 
 EXPENSES
-${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleString()} - ${e.purpose}${e.notes ? ` (${e.notes})` : ''}`).join('\n')}
+${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.notes ? ` (${e.notes})` : ''}`).join('\n')}
     `.trim();
 
     const blob = new Blob([reportText], { type: 'text/plain' });
@@ -297,7 +298,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 <p className="text-sm text-gray-600 font-medium">Money Received</p>
               </div>
             </div>
-            <p className="text-4xl font-bold text-gray-900 mb-2">Rs. {totalDonations.toLocaleString()}</p>
+            <p className="text-4xl font-bold text-gray-900 mb-2">{formatCurrency(totalDonations)}</p>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
               <p className="text-green-700 font-semibold">Good</p>
@@ -314,7 +315,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 <p className="text-sm text-gray-600 font-medium">Money Spent</p>
               </div>
             </div>
-            <p className="text-4xl font-bold text-gray-900 mb-2">Rs. {totalExpenses.toLocaleString()}</p>
+            <p className="text-4xl font-bold text-gray-900 mb-2">{formatCurrency(totalExpenses)}</p>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
               <p className="text-green-700 font-semibold">Tracked</p>
@@ -343,7 +344,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 <p className="text-sm text-gray-600 font-medium">Money Left</p>
               </div>
             </div>
-            <p className="text-4xl font-bold text-gray-900 mb-2">Rs. {balance.toLocaleString()}</p>
+            <p className="text-4xl font-bold text-gray-900 mb-2">{formatCurrency(balance)}</p>
             <div className="flex items-center gap-2">
               {balance > totalDonations * 0.3 ? (
                 <>
@@ -372,7 +373,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-700">Money Received</span>
-                <span className="text-sm font-bold text-gray-900">Rs. {totalDonations.toLocaleString()}</span>
+                <span className="text-sm font-bold text-gray-900">{formatCurrency(totalDonations)}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-6">
                 <div
@@ -387,7 +388,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-700">Money Spent</span>
-                <span className="text-sm font-bold text-gray-900">Rs. {totalExpenses.toLocaleString()}</span>
+                <span className="text-sm font-bold text-gray-900">{formatCurrency(totalExpenses)}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-6">
                 <div
@@ -436,8 +437,8 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 </h3>
                 <p className="text-gray-700 mb-3">
                   {successType === 'donation'
-                    ? `You recorded a donation of Rs. ${parseFloat(successAmount).toLocaleString()}`
-                    : `You recorded an expense of Rs. ${parseFloat(successAmount).toLocaleString()}`}
+                    ? `You recorded a donation of ${formatCurrency(successAmount)}`
+                    : `You recorded an expense of ${formatCurrency(successAmount)}`}
                 </p>
                 <div className="flex gap-3">
                   <button
@@ -569,7 +570,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                               </div>
                             </div>
                             <p className={`text-lg font-bold ${isDonation ? 'text-emerald-600' : 'text-rose-600'}`}>
-                              {isDonation ? '+' : '-'}Rs. {parseFloat(item.amount.toString()).toLocaleString()}
+                              {isDonation ? '+' : '-'}{formatCurrency(item.amount)}
                             </p>
                           </div>
                         );
@@ -615,7 +616,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                         )}
                       </div>
                       <p className="text-xl font-bold text-emerald-600">
-                        Rs. {parseFloat(donation.amount.toString()).toLocaleString()}
+                        {formatCurrency(donation.amount)}
                       </p>
                     </div>
                   ))}
@@ -657,7 +658,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                         )}
                       </div>
                       <p className="text-xl font-bold text-rose-600">
-                        Rs. {parseFloat(expense.amount.toString()).toLocaleString()}
+                        {formatCurrency(expense.amount)}
                       </p>
                     </div>
                   ))}
