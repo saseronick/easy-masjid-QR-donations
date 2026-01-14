@@ -58,9 +58,16 @@ export default function NewAdminPanel() {
 
   const loadOrganizations = async () => {
     try {
+      if (!user) {
+        setOrganizations([]);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('organizations')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
