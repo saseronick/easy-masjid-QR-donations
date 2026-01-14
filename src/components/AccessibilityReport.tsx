@@ -7,8 +7,8 @@ export function AccessibilityReport() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto p-8">
+    <div className="min-h-screen bg-white page-wrapper">
+      <div className="max-w-5xl mx-auto p-8 content-wrapper">
         <div className="no-print mb-8">
           <button
             onClick={handlePrint}
@@ -298,10 +298,32 @@ export function AccessibilityReport() {
 
       <style>{`
         @media print {
+          * {
+            print-color-adjust: exact !important;
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+
           body, html {
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
+            width: 100% !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+          }
+
+          .page-wrapper {
+            min-height: 0 !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+          }
+
+          .content-wrapper {
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
 
           .no-print {
@@ -312,20 +334,30 @@ export function AccessibilityReport() {
             font-size: 10pt !important;
             color: #000 !important;
             background: #fff !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+
+          header {
+            margin-bottom: 16pt !important;
+            border-bottom: 2pt solid #000 !important;
+            padding-bottom: 8pt !important;
           }
 
           h1 {
-            font-size: 20pt !important;
+            font-size: 18pt !important;
             color: #000 !important;
-            margin-bottom: 8pt !important;
+            margin: 0 0 4pt 0 !important;
+            font-weight: 700 !important;
           }
 
           h2 {
-            font-size: 14pt !important;
+            font-size: 13pt !important;
             page-break-after: avoid !important;
             color: #000 !important;
-            margin-top: 12pt !important;
-            margin-bottom: 6pt !important;
+            margin: 12pt 0 6pt 0 !important;
+            font-weight: 700 !important;
           }
 
           h3 {
@@ -333,42 +365,69 @@ export function AccessibilityReport() {
             page-break-after: avoid !important;
             color: #000 !important;
             font-weight: 600 !important;
+            margin: 4pt 0 2pt 0 !important;
           }
 
           p, li {
-            font-size: 10pt !important;
+            font-size: 9pt !important;
             color: #000 !important;
-            line-height: 1.4 !important;
+            line-height: 1.3 !important;
+            margin: 2pt 0 !important;
           }
 
           section {
             page-break-inside: avoid !important;
-            margin-bottom: 12pt !important;
+            margin-bottom: 10pt !important;
+          }
+
+          footer {
+            margin-top: 12pt !important;
+            padding-top: 6pt !important;
+            border-top: 1pt solid #000 !important;
           }
 
           .bg-gray-50,
           .bg-emerald-50,
           .bg-blue-50,
           .bg-purple-50 {
-            background-color: #f3f4f6 !important;
-            border: 1px solid #d1d5db !important;
-            padding: 8pt !important;
+            background-color: #f5f5f5 !important;
+            border: 1pt solid #999 !important;
+            padding: 6pt !important;
+            margin: 4pt 0 !important;
           }
 
-          .border-red-600,
-          .border-yellow-600,
+          .border-l-4 {
+            border-left: 2pt solid #333 !important;
+            padding-left: 6pt !important;
+            margin: 4pt 0 !important;
+          }
+
+          .border-red-600 {
+            border-left-color: #000 !important;
+          }
+
+          .border-yellow-600 {
+            border-left-color: #666 !important;
+          }
+
           .border-blue-600 {
-            border-left: 3pt solid #000 !important;
-            padding-left: 8pt !important;
+            border-left-color: #333 !important;
           }
 
           .text-red-600,
           .text-yellow-600,
           .text-blue-600,
           .text-emerald-600,
+          .text-emerald-900,
+          .text-emerald-800,
+          .text-blue-900,
+          .text-blue-800,
+          .text-purple-900,
+          .text-purple-800,
           .text-gray-600,
           .text-gray-700,
-          .text-gray-900 {
+          .text-gray-900,
+          .text-gray-500 {
             color: #000 !important;
           }
 
@@ -378,10 +437,31 @@ export function AccessibilityReport() {
 
           .grid-cols-4 {
             grid-template-columns: repeat(4, 1fr) !important;
+            gap: 6pt !important;
           }
 
           .text-center {
             text-align: center !important;
+          }
+
+          .text-sm {
+            font-size: 9pt !important;
+          }
+
+          .text-3xl {
+            font-size: 16pt !important;
+          }
+
+          .text-xl {
+            font-size: 12pt !important;
+          }
+
+          .text-2xl {
+            font-size: 13pt !important;
+          }
+
+          .text-lg {
+            font-size: 10pt !important;
           }
 
           .font-bold {
@@ -392,23 +472,64 @@ export function AccessibilityReport() {
             font-weight: 600 !important;
           }
 
-          .space-y-6 > * + *,
-          .space-y-4 > * + *,
-          .space-y-2 > * + *,
-          .space-y-1 > * + * {
-            margin-top: 8pt !important;
+          .space-y-6 > *,
+          .space-y-4 > *,
+          .space-y-2 > *,
+          .space-y-1 > * {
+            margin-bottom: 4pt !important;
+          }
+
+          .gap-4 {
+            gap: 4pt !important;
+          }
+
+          .mb-2, .mb-4, .mb-6, .mb-8, .mb-10, .mb-12 {
+            margin-bottom: 6pt !important;
+          }
+
+          .mt-2, .mt-4, .mt-12 {
+            margin-top: 4pt !important;
+          }
+
+          .p-4, .p-6 {
+            padding: 6pt !important;
+          }
+
+          .pl-4 {
+            padding-left: 6pt !important;
+          }
+
+          .pb-6 {
+            padding-bottom: 6pt !important;
+          }
+
+          .pt-6 {
+            padding-top: 6pt !important;
+          }
+
+          .rounded-lg {
+            border-radius: 0 !important;
           }
 
           ul {
-            padding-left: 20pt !important;
+            padding-left: 16pt !important;
+            margin: 4pt 0 !important;
+          }
+
+          ul.list-disc {
+            list-style-type: disc !important;
+          }
+
+          ul.list-inside {
+            list-style-position: inside !important;
           }
 
           @page {
-            margin: 0.6in !important;
-            size: letter !important;
+            margin: 0.5in !important;
+            size: letter portrait !important;
           }
 
-          svg {
+          svg, .lucide {
             display: none !important;
           }
 
@@ -416,9 +537,21 @@ export function AccessibilityReport() {
             display: block !important;
           }
 
+          .items-center {
+            align-items: flex-start !important;
+          }
+
+          .mr-2 {
+            margin-right: 0 !important;
+          }
+
           strong {
             font-weight: 700 !important;
             color: #000 !important;
+          }
+
+          div {
+            overflow: visible !important;
           }
         }
       `}</style>
