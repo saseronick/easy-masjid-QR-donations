@@ -46,10 +46,10 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
         : 'Invalid characters - use numbers only';
     }
 
-    if (cleaned.length < 10) {
+    if (cleaned.length < 11) {
       return language === 'ur'
-        ? `کم از کم 10 نمبر درکار ہیں (آپ نے ${cleaned.length} درج کیے)`
-        : `At least 10 digits required (you entered ${cleaned.length})`;
+        ? `پاکستانی موبائل نمبر 11 ہندسے کا ہونا چاہیے (آپ نے ${cleaned.length} درج کیے)`
+        : `Pakistani mobile numbers must be 11 digits (you entered ${cleaned.length})`;
     }
 
     if (cleaned.length > 15) {
@@ -58,10 +58,31 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
         : `Maximum 15 digits allowed (you entered ${cleaned.length})`;
     }
 
-    if (cleaned.length === 11 && !cleaned.startsWith('0')) {
+    if (!cleaned.startsWith('0')) {
       return language === 'ur'
-        ? 'پاکستانی نمبر 0 سے شروع ہونا چاہیے (03001234567)'
-        : 'Pakistani numbers should start with 0 (e.g., 03001234567)';
+        ? 'پاکستانی نمبر 0 سے شروع ہونا چاہیے (مثال: 03001234567)'
+        : 'Pakistani numbers must start with 0 (e.g., 03001234567)';
+    }
+
+    if (cleaned.length === 11 && !cleaned.startsWith('03')) {
+      return language === 'ur'
+        ? 'موبائل نمبر 03 سے شروع ہونا چاہیے (مثال: 03001234567)'
+        : 'Mobile numbers must start with 03 (e.g., 03001234567)';
+    }
+
+    const validMobilePrefixes = ['0300', '0301', '0302', '0303', '0304', '0305', '0306', '0307', '0308', '0309',
+                                  '0310', '0311', '0312', '0313', '0314', '0315', '0316', '0317', '0318', '0320',
+                                  '0321', '0322', '0323', '0324', '0325', '0330', '0331', '0332', '0333', '0334',
+                                  '0335', '0336', '0337', '0340', '0341', '0342', '0343', '0344', '0345', '0346',
+                                  '0347', '0348', '0349'];
+
+    if (cleaned.length === 11) {
+      const prefix = cleaned.substring(0, 4);
+      if (!validMobilePrefixes.includes(prefix)) {
+        return language === 'ur'
+          ? `غلط موبائل کوڈ - برائے مہربانی درست پاکستانی نمبر استعمال کریں`
+          : `Invalid mobile code - please use a valid Pakistani mobile number`;
+      }
     }
 
     return '';
