@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { LogIn, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
+import ConfirmDialog from './ConfirmDialog';
 
 interface LoginProps {
   onCancel?: () => void;
@@ -17,6 +18,7 @@ export default function Login({ onCancel }: LoginProps) {
   const [passwordError, setPasswordError] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   const validateEmail = (email: string): string => {
     if (!email.trim()) {
@@ -105,12 +107,36 @@ export default function Login({ onCancel }: LoginProps) {
     }
   };
 
+  const handleCancelClick = () => {
+    if (email || password) {
+      setShowCancelConfirm(true);
+    } else {
+      onCancel?.();
+    }
+  };
+
+  const handleConfirmCancel = () => {
+    setShowCancelConfirm(false);
+    onCancel?.();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
+      {showCancelConfirm && (
+        <ConfirmDialog
+          title="Are you sure?"
+          message="Your changes will be lost if you go back now."
+          confirmText="Yes, go back"
+          cancelText="Stay here"
+          onConfirm={handleConfirmCancel}
+          onCancel={() => setShowCancelConfirm(false)}
+          type="warning"
+        />
+      )}
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         {onCancel && (
           <button
-            onClick={onCancel}
+            onClick={handleCancelClick}
             className="mb-4 flex items-center gap-2 text-gray-700 hover:text-gray-900 font-bold text-lg py-3 px-4 min-h-[56px] rounded-lg hover:bg-gray-100 transition-colors border-2 border-gray-300"
           >
             <ArrowLeft className="w-6 h-6" />
