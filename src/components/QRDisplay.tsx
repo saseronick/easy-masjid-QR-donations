@@ -3,17 +3,20 @@ import { ArrowLeft, Download, Share2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { PaymentInfo, Language } from '../types';
 import { translations } from '../data/translations';
+import AccountPrompt from './AccountPrompt';
 
 interface QRDisplayProps {
   paymentInfo: PaymentInfo;
   language: Language;
   onBack: () => void;
+  onSignUp?: () => void;
 }
 
-export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayProps) {
+export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: QRDisplayProps) {
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [qrPrintDataUrl, setQrPrintDataUrl] = useState<string>('');
   const [showShareTip, setShowShareTip] = useState(false);
+  const [showAccountPrompt, setShowAccountPrompt] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
@@ -22,7 +25,9 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
   const generatePaymentUrl = () => {
     const { method, identifier, name } = paymentInfo;
 
-    if (method === 'jazzcash') {
+    if (method === 'raast') {
+      return `tel:${identifier.replace(/\D/g, '')}`;
+    } else if (method === 'jazzcash') {
       return `jazzcash://send?to=${encodeURIComponent(identifier)}&note=${encodeURIComponent(`Donation to ${name}`)}`;
     } else if (method === 'easypaisa') {
       return `easypaisa://transfer?recipient=${encodeURIComponent(identifier)}&description=${encodeURIComponent(`Donation to ${name}`)}`;
@@ -117,8 +122,10 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
 
       ctx.fillStyle = '#666666';
       ctx.font = '24px "Atkinson Hyperlegible", Arial, sans-serif';
-      const method = paymentInfo.method === 'jazzcash' ? 'JazzCash' : 'Easypaisa';
-      ctx.fillText(`Opens ${method} app automatically`, canvas.width / 2, qrY + 660);
+      const methodName = paymentInfo.method === 'jazzcash' ? 'JazzCash' :
+                        paymentInfo.method === 'easypaisa' ? 'Easypaisa' :
+                        'RAAST / Any Payment App';
+      ctx.fillText(`${paymentInfo.method === 'raast' ? 'Works with' : 'Opens'} ${methodName}`, canvas.width / 2, qrY + 660);
 
 
       const dataUrl = canvas.toDataURL('image/png');
@@ -235,6 +242,16 @@ export default function QRDisplay({ paymentInfo, language, onBack }: QRDisplayPr
           </ol>
         </div>
       </div>
+
+      {showAccountPrompt && onSignUp && (
+        <div className="mt-6">
+          <AccountPrompt
+            language={language}
+            onSignUp={onSignUp}
+            onDismiss={() => setShowAccountPrompt(false)}
+          />
+        </div>
+      )}
 
       <canvas ref={canvasRef} style={{ display: 'none' }} width="800" height="1100" aria-hidden="true" />
     </div>

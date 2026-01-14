@@ -4,7 +4,7 @@ import LanguageSelector from './components/LanguageSelector';
 import PaymentForm from './components/PaymentForm';
 import QRDisplay from './components/QRDisplay';
 import Login from './components/Login';
-import AdminPanel from './components/AdminPanel';
+import NewAdminPanel from './components/NewAdminPanel';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
 
@@ -13,6 +13,7 @@ function App() {
   const [language, setLanguage] = useState<Language>('en');
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
@@ -23,6 +24,11 @@ function App() {
 
   const handleBack = () => {
     setPaymentInfo(null);
+  };
+
+  const handleSignUp = () => {
+    setShowSignUp(true);
+    setShowAdmin(true);
   };
 
   if (loading) {
@@ -37,7 +43,7 @@ function App() {
     if (!user) {
       return <Login />;
     }
-    return <AdminPanel />;
+    return <NewAdminPanel />;
   }
 
   return (
@@ -83,6 +89,7 @@ function App() {
               paymentInfo={paymentInfo}
               language={language}
               onBack={handleBack}
+              onSignUp={handleSignUp}
             />
           )}
         </main>

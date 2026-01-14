@@ -9,12 +9,13 @@ interface PaymentFormProps {
 }
 
 const getPaymentMethods = (language: Language) => [
+  { id: 'raast' as PaymentMethod, icon: Smartphone, key: 'raast' },
   { id: 'jazzcash' as PaymentMethod, icon: Smartphone, key: 'jazzcash' },
   { id: 'easypaisa' as PaymentMethod, icon: Smartphone, key: 'easypaisa' }
 ];
 
 export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
-  const [method, setMethod] = useState<PaymentMethod>('jazzcash');
+  const [method, setMethod] = useState<PaymentMethod>('raast');
   const [identifier, setIdentifier] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');

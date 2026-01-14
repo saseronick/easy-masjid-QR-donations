@@ -34,10 +34,25 @@ export interface Donation {
   donor_name?: string;
   donor_phone?: string;
   donor_email?: string;
-  payment_method: 'jazzcash' | 'easypaisa';
+  payment_method?: 'jazzcash' | 'easypaisa' | 'raast' | 'manual';
   transaction_id?: string;
   status: 'pending' | 'completed' | 'failed' | 'refunded';
   payment_response?: Record<string, unknown>;
+  manual_entry?: boolean;
+  notes?: string;
+  date: string;
   created_at: string;
   completed_at?: string;
+}
+
+export interface Expense {
+  id: string;
+  organization_id: string;
+  amount: number;
+  currency: string;
+  purpose: string;
+  notes?: string;
+  date: string;
+  created_at: string;
+  updated_at: string;
 }
