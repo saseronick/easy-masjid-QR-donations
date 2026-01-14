@@ -232,7 +232,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             <div id="identifier-helper" className="mt-3 bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-start gap-2">
               <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <p className="text-green-700 text-base font-medium">
-                {language === 'ur' ? 'درست نمبر!' : 'Correct number!'}
+                {language === 'ur' ? 'ٹھیک ہے!' : 'Looks good!'}
               </p>
             </div>
           )}
@@ -283,7 +283,7 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
             <div className="mt-3 bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-start gap-2">
               <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <p className="text-green-700 text-base font-medium">
-                {language === 'ur' ? 'درست نام!' : 'Correct name!'}
+                {language === 'ur' ? 'ٹھیک ہے!' : 'Looks good!'}
               </p>
             </div>
           )}
