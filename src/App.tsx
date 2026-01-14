@@ -91,7 +91,17 @@ function App() {
         onLanguageChange={handleLanguageChange}
       />
       <div className="container mx-auto px-6 py-8 max-w-4xl">
-        {/* Language Selector - First thing visible */}
+        {/* Header - First thing visible */}
+        <header className="text-center mb-8" role="banner">
+          <h1 className="text-4xl md:text-5xl font-bold text-green-900 mb-3 leading-tight" id="main-heading">
+            {t('title')}
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-6">
+            {t('valueProposition')}
+          </p>
+        </header>
+
+        {/* Language Selector */}
         <nav aria-label="Language Selection" role="navigation" className="mb-8">
           <LanguageSelector
             currentLanguage={language}
@@ -99,31 +109,21 @@ function App() {
           />
         </nav>
 
-        {/* Admin Link */}
-        <div className="flex justify-end gap-4 mb-6 flex-wrap">
+        {/* Admin Links - More prominent */}
+        <div className="flex justify-center gap-3 mb-8 flex-wrap">
           <button
             onClick={() => setShowQRHistory(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
+            className="text-base text-gray-700 hover:text-green-900 py-3 px-5 min-h-[48px] rounded-lg border-2 border-gray-300 hover:border-green-700 bg-white hover:bg-green-50 transition-all font-semibold shadow-sm"
           >
-            View QR History
+            📋 View QR History
           </button>
           <button
             onClick={() => setShowAdmin(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
+            className="text-base text-gray-700 hover:text-green-900 py-3 px-5 min-h-[48px] rounded-lg border-2 border-gray-300 hover:border-green-700 bg-white hover:bg-green-50 transition-all font-semibold shadow-sm"
           >
-            Admin Panel
+            🔐 Admin Panel
           </button>
         </div>
-
-        {/* Header */}
-        <header className="text-center mb-10" role="banner">
-          <h1 className="text-4xl font-bold text-green-900 mb-4 leading-tight" id="main-heading">
-            {t('title')}
-          </h1>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            {t('valueProposition')}
-          </p>
-        </header>
 
         {/* Main Content */}
         <main className="max-w-3xl mx-auto" role="main" aria-labelledby="main-heading">
