@@ -8,7 +8,7 @@ interface LanguageSelectorProps {
 }
 
 const languages = [
-  { code: 'en' as Language, name: 'English', nativeName: 'English', flag: '🇬🇧' },
+  { code: 'en' as Language, name: 'English', nativeName: 'English', flag: '🇺🇸' },
   { code: 'ur' as Language, name: 'Urdu', nativeName: 'اردو', flag: '🇵🇰' },
   { code: 'pa' as Language, name: 'Punjabi', nativeName: 'پنجابی', flag: '🇵🇰' }
 ];
