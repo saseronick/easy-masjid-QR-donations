@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase, Organization, Donation, Expense } from '../lib/supabase';
-import { Plus, Download, Receipt, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { Plus, Download, X, TrendingUp, TrendingDown, Wallet, Receipt, ArrowLeft } from 'lucide-react';
 
 interface DashboardProps {
   organization: Organization;
@@ -11,9 +11,9 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showDonationForm, setShowDonationForm] = useState(false);
-  const [showExpenseForm, setShowExpenseForm] = useState(false);
-  const [activeTab, setActiveTab] = useState<'donations' | 'expenses'>('donations');
+  const [showDonationModal, setShowDonationModal] = useState(false);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [activeView, setActiveView] = useState<'overview' | 'donations' | 'expenses'>('overview');
 
   const [donationForm, setDonationForm] = useState({
     amount: '',
@@ -76,7 +76,7 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
 
       if (error) throw error;
 
-      setShowDonationForm(false);
+      setShowDonationModal(false);
       setDonationForm({
         amount: '',
         donor_name: '',
@@ -104,7 +104,7 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
 
       if (error) throw error;
 
-      setShowExpenseForm(false);
+      setShowExpenseModal(false);
       setExpenseForm({
         amount: '',
         purpose: '',
@@ -156,301 +156,430 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
     );
   }
 
+  const isFirstTime = donations.length === 0 && expenses.length === 0;
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-6 py-8 max-w-6xl">
-        <div className="mb-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
+        <div className="mb-6">
           <button
             onClick={onBack}
-            className="text-gray-600 hover:text-gray-900 mb-4 py-2 px-3 min-h-[44px]"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 py-2 px-3 min-h-[48px] min-w-[48px] rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Back to Organizations"
           >
-            ← Back to Organizations
+            <ArrowLeft className="w-5 h-5" />
+            <span className="hidden sm:inline">Back</span>
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">{organization.name}</h1>
-          <p className="text-gray-600">{organization.contact_phone}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{organization.name}</h1>
+          <p className="text-gray-600 mt-1">{organization.contact_phone}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-green-100">Total Donations</span>
-              <TrendingUp className="w-6 h-6" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center gap-3 mb-2">
+              <TrendingUp className="w-6 h-6 opacity-80" />
+              <span className="text-emerald-50 text-sm font-medium">Total Donations</span>
             </div>
-            <p className="text-3xl font-bold">Rs. {totalDonations.toLocaleString()}</p>
+            <p className="text-3xl sm:text-4xl font-bold">Rs. {totalDonations.toLocaleString()}</p>
+            <p className="text-emerald-100 text-sm mt-2">{donations.length} entries</p>
           </div>
 
-          <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-lg p-6 text-white">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-red-100">Total Expenses</span>
-              <TrendingDown className="w-6 h-6" />
+          <div className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center gap-3 mb-2">
+              <TrendingDown className="w-6 h-6 opacity-80" />
+              <span className="text-rose-50 text-sm font-medium">Total Expenses</span>
             </div>
-            <p className="text-3xl font-bold">Rs. {totalExpenses.toLocaleString()}</p>
+            <p className="text-3xl sm:text-4xl font-bold">Rs. {totalExpenses.toLocaleString()}</p>
+            <p className="text-rose-100 text-sm mt-2">{expenses.length} entries</p>
           </div>
 
-          <div className={`bg-gradient-to-br rounded-lg shadow-lg p-6 text-white ${
-            balance >= 0 ? 'from-blue-500 to-blue-600' : 'from-orange-500 to-orange-600'
+          <div className={`bg-gradient-to-br rounded-xl shadow-lg p-6 text-white ${
+            balance >= 0 ? 'from-blue-500 to-blue-600' : 'from-amber-500 to-amber-600'
           }`}>
-            <div className="flex items-center justify-between mb-2">
-              <span className="opacity-90">Balance</span>
-              <Wallet className="w-6 h-6" />
+            <div className="flex items-center gap-3 mb-2">
+              <Wallet className="w-6 h-6 opacity-80" />
+              <span className="opacity-90 text-sm font-medium">Current Balance</span>
             </div>
-            <p className="text-3xl font-bold">Rs. {balance.toLocaleString()}</p>
+            <p className="text-3xl sm:text-4xl font-bold">Rs. {balance.toLocaleString()}</p>
+            <p className={`text-sm mt-2 ${balance >= 0 ? 'text-blue-100' : 'text-amber-100'}`}>
+              {balance >= 0 ? 'Funds available' : 'Deficit'}
+            </p>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex gap-4">
+        {isFirstTime && (
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-6 sm:p-8 mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Welcome to Your Dashboard</h2>
+            <p className="text-gray-700 mb-6">Get started by logging your first donation or expense.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button
-                onClick={() => setActiveTab('donations')}
-                className={`px-4 py-3 min-h-[50px] rounded-lg font-medium transition-colors ${
-                  activeTab === 'donations'
-                    ? 'bg-green-700 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                onClick={() => setShowDonationModal(true)}
+                className="flex items-center justify-center gap-3 px-6 py-4 min-h-[56px] bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-md font-medium text-lg"
               >
-                Donations ({donations.length})
+                <Plus className="w-6 h-6" />
+                Log First Donation
               </button>
               <button
-                onClick={() => setActiveTab('expenses')}
-                className={`px-4 py-3 min-h-[50px] rounded-lg font-medium transition-colors ${
-                  activeTab === 'expenses'
-                    ? 'bg-red-700 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                onClick={() => setShowExpenseModal(true)}
+                className="flex items-center justify-center gap-3 px-6 py-4 min-h-[56px] bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors shadow-md font-medium text-lg"
               >
-                Expenses ({expenses.length})
+                <Plus className="w-6 h-6" />
+                Log First Expense
               </button>
             </div>
-            <button
-              onClick={exportReport}
-              className="flex items-center gap-2 px-4 py-3 min-h-[50px] bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Download className="w-5 h-5" />
-              Export Report
-            </button>
+          </div>
+        )}
+
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="border-b border-gray-200 bg-gray-50 px-4 sm:px-6 py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex gap-2 overflow-x-auto">
+                <button
+                  onClick={() => setActiveView('overview')}
+                  className={`px-4 py-2.5 min-h-[48px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                    activeView === 'overview'
+                      ? 'bg-gray-900 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  Overview
+                </button>
+                <button
+                  onClick={() => setActiveView('donations')}
+                  className={`px-4 py-2.5 min-h-[48px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                    activeView === 'donations'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  Donations ({donations.length})
+                </button>
+                <button
+                  onClick={() => setActiveView('expenses')}
+                  className={`px-4 py-2.5 min-h-[48px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                    activeView === 'expenses'
+                      ? 'bg-rose-600 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  Expenses ({expenses.length})
+                </button>
+              </div>
+              <button
+                onClick={exportReport}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 min-h-[48px] bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+              >
+                <Download className="w-5 h-5" />
+                <span className="hidden sm:inline">Export Report</span>
+                <span className="sm:hidden">Export</span>
+              </button>
+            </div>
           </div>
 
-          {activeTab === 'donations' && (
-            <div>
-              {!showDonationForm && (
+          <div className="p-4 sm:p-6">
+            {activeView === 'overview' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <button
+                    onClick={() => setShowDonationModal(true)}
+                    className="flex items-center justify-center gap-3 px-6 py-4 min-h-[56px] bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Log Donation
+                  </button>
+                  <button
+                    onClick={() => setShowExpenseModal(true)}
+                    className="flex items-center justify-center gap-3 px-6 py-4 min-h-[56px] bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-medium"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Log Expense
+                  </button>
+                </div>
+
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+                  <div className="space-y-3">
+                    {[...donations.slice(0, 3), ...expenses.slice(0, 3)]
+                      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                      .slice(0, 5)
+                      .map((item) => {
+                        const isDonation = 'donor_name' in item;
+                        return (
+                          <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                isDonation ? 'bg-emerald-100' : 'bg-rose-100'
+                              }`}>
+                                {isDonation ? (
+                                  <TrendingUp className="w-5 h-5 text-emerald-600" />
+                                ) : (
+                                  <Receipt className="w-5 h-5 text-rose-600" />
+                                )}
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {isDonation ? (item as Donation).donor_name || 'Anonymous' : (item as Expense).purpose}
+                                </p>
+                                <p className="text-sm text-gray-600">{item.date}</p>
+                              </div>
+                            </div>
+                            <p className={`text-lg font-bold ${isDonation ? 'text-emerald-600' : 'text-rose-600'}`}>
+                              {isDonation ? '+' : '-'}Rs. {parseFloat(item.amount.toString()).toLocaleString()}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    {donations.length === 0 && expenses.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">No activity yet</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeView === 'donations' && (
+              <div className="space-y-4">
                 <button
-                  onClick={() => setShowDonationForm(true)}
-                  className="mb-4 flex items-center gap-2 px-4 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors"
+                  onClick={() => setShowDonationModal(true)}
+                  className="flex items-center gap-2 px-6 py-3 min-h-[48px] bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
                 >
                   <Plus className="w-5 h-5" />
                   Log Donation
                 </button>
-              )}
 
-              {showDonationForm && (
-                <form onSubmit={handleAddDonation} className="bg-gray-50 rounded-lg p-4 mb-6">
-                  <h3 className="font-bold text-lg mb-4">Log New Donation</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Amount (PKR) *
-                      </label>
-                      <input
-                        type="number"
-                        required
-                        min="1"
-                        step="0.01"
-                        value={donationForm.amount}
-                        onChange={(e) => setDonationForm({ ...donationForm, amount: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Donor Name (optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={donationForm.donor_name}
-                        onChange={(e) => setDonationForm({ ...donationForm, donor_name: e.target.value })}
-                        placeholder="Anonymous"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date *
-                      </label>
-                      <input
-                        type="date"
-                        required
-                        value={donationForm.date}
-                        onChange={(e) => setDonationForm({ ...donationForm, date: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Notes (optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={donationForm.notes}
-                        onChange={(e) => setDonationForm({ ...donationForm, notes: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-3 mt-4">
-                    <button
-                      type="submit"
-                      className="px-4 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800"
-                    >
-                      Add Donation
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowDonationForm(false)}
-                      className="px-4 py-3 min-h-[50px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              <div className="space-y-3">
-                {donations.map((donation) => (
-                  <div key={donation.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {donation.donor_name || 'Anonymous'}
-                      </p>
-                      <p className="text-sm text-gray-600">{donation.date}</p>
-                      {donation.notes && (
-                        <p className="text-sm text-gray-500 mt-1">{donation.notes}</p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-green-700">
+                <div className="space-y-3">
+                  {donations.map((donation) => (
+                    <div key={donation.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {donation.donor_name || 'Anonymous'}
+                        </p>
+                        <p className="text-sm text-gray-600">{donation.date}</p>
+                        {donation.notes && (
+                          <p className="text-sm text-gray-500 mt-1">{donation.notes}</p>
+                        )}
+                      </div>
+                      <p className="text-xl font-bold text-emerald-600">
                         Rs. {parseFloat(donation.amount.toString()).toLocaleString()}
                       </p>
                     </div>
-                  </div>
-                ))}
-                {donations.length === 0 && (
-                  <p className="text-center text-gray-500 py-8">No donations logged yet</p>
-                )}
+                  ))}
+                  {donations.length === 0 && (
+                    <p className="text-center text-gray-500 py-12">No donations logged yet</p>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === 'expenses' && (
-            <div>
-              {!showExpenseForm && (
+            {activeView === 'expenses' && (
+              <div className="space-y-4">
                 <button
-                  onClick={() => setShowExpenseForm(true)}
-                  className="mb-4 flex items-center gap-2 px-4 py-3 min-h-[50px] bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors"
+                  onClick={() => setShowExpenseModal(true)}
+                  className="flex items-center gap-2 px-6 py-3 min-h-[48px] bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-medium"
                 >
                   <Plus className="w-5 h-5" />
                   Log Expense
                 </button>
-              )}
 
-              {showExpenseForm && (
-                <form onSubmit={handleAddExpense} className="bg-gray-50 rounded-lg p-4 mb-6">
-                  <h3 className="font-bold text-lg mb-4">Log New Expense</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Amount (PKR) *
-                      </label>
-                      <input
-                        type="number"
-                        required
-                        min="1"
-                        step="0.01"
-                        value={expenseForm.amount}
-                        onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Purpose *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={expenseForm.purpose}
-                        onChange={(e) => setExpenseForm({ ...expenseForm, purpose: e.target.value })}
-                        placeholder="e.g., Electricity Bill"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date *
-                      </label>
-                      <input
-                        type="date"
-                        required
-                        value={expenseForm.date}
-                        onChange={(e) => setExpenseForm({ ...expenseForm, date: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Notes (optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={expenseForm.notes}
-                        onChange={(e) => setExpenseForm({ ...expenseForm, notes: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-3 mt-4">
-                    <button
-                      type="submit"
-                      className="px-4 py-3 min-h-[50px] bg-red-700 text-white rounded-lg hover:bg-red-800"
-                    >
-                      Add Expense
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowExpenseForm(false)}
-                      className="px-4 py-3 min-h-[50px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              <div className="space-y-3">
-                {expenses.map((expense) => (
-                  <div key={expense.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="font-medium text-gray-900">{expense.purpose}</p>
-                      <p className="text-sm text-gray-600">{expense.date}</p>
-                      {expense.notes && (
-                        <p className="text-sm text-gray-500 mt-1">{expense.notes}</p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-red-700">
+                <div className="space-y-3">
+                  {expenses.map((expense) => (
+                    <div key={expense.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div>
+                        <p className="font-medium text-gray-900">{expense.purpose}</p>
+                        <p className="text-sm text-gray-600">{expense.date}</p>
+                        {expense.notes && (
+                          <p className="text-sm text-gray-500 mt-1">{expense.notes}</p>
+                        )}
+                      </div>
+                      <p className="text-xl font-bold text-rose-600">
                         Rs. {parseFloat(expense.amount.toString()).toLocaleString()}
                       </p>
                     </div>
-                  </div>
-                ))}
-                {expenses.length === 0 && (
-                  <p className="text-center text-gray-500 py-8">No expenses logged yet</p>
-                )}
+                  ))}
+                  {expenses.length === 0 && (
+                    <p className="text-center text-gray-500 py-12">No expenses logged yet</p>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
+
+      {showDonationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-gray-900">Log Donation</h3>
+              <button
+                onClick={() => setShowDonationModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <form onSubmit={handleAddDonation} className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Amount (PKR) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    step="0.01"
+                    value={donationForm.amount}
+                    onChange={(e) => setDonationForm({ ...donationForm, amount: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Donor Name
+                  </label>
+                  <input
+                    type="text"
+                    value={donationForm.donor_name}
+                    onChange={(e) => setDonationForm({ ...donationForm, donor_name: e.target.value })}
+                    placeholder="Anonymous"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={donationForm.date}
+                    onChange={(e) => setDonationForm({ ...donationForm, date: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notes
+                  </label>
+                  <textarea
+                    value={donationForm.notes}
+                    onChange={(e) => setDonationForm({ ...donationForm, notes: e.target.value })}
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="Optional notes..."
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 min-h-[48px] bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium"
+                >
+                  Add Donation
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowDonationModal(false)}
+                  className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showExpenseModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-gray-900">Log Expense</h3>
+              <button
+                onClick={() => setShowExpenseModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <form onSubmit={handleAddExpense} className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Amount (PKR) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    step="0.01"
+                    value={expenseForm.amount}
+                    onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Purpose *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={expenseForm.purpose}
+                    onChange={(e) => setExpenseForm({ ...expenseForm, purpose: e.target.value })}
+                    placeholder="e.g., Electricity Bill"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={expenseForm.date}
+                    onChange={(e) => setExpenseForm({ ...expenseForm, date: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notes
+                  </label>
+                  <textarea
+                    value={expenseForm.notes}
+                    onChange={(e) => setExpenseForm({ ...expenseForm, notes: e.target.value })}
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                    placeholder="Optional notes..."
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 min-h-[48px] bg-rose-600 text-white rounded-lg hover:bg-rose-700 font-medium"
+                >
+                  Add Expense
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowExpenseModal(false)}
+                  className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
