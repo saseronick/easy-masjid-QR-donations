@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase, Organization, Donation, Expense } from '../lib/supabase';
-import { Plus, Download, X, TrendingUp, TrendingDown, Wallet, Receipt, ArrowLeft } from 'lucide-react';
+import { Plus, Download, X, TrendingUp, TrendingDown, Wallet, Receipt, ArrowLeft, DollarSign, ShoppingCart, CheckCircle, AlertTriangle, AlertCircle } from 'lucide-react';
 import { DashboardSkeleton } from './LoadingSkeleton';
 import { offlineStorage } from '../services/offlineStorage';
 import { syncQueue } from '../services/syncQueue';
@@ -222,36 +222,140 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
           <p className="text-gray-600 mt-1">{organization.contact_phone}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white">
-            <div className="flex items-center gap-3 mb-2">
-              <TrendingUp className="w-6 h-6 opacity-80" />
-              <span className="text-emerald-50 text-sm font-medium">Total Donations</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
+          <div className="bg-green-50 border-2 border-green-200 rounded-xl shadow-md p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                <DollarSign className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-medium">Money Received</p>
+              </div>
             </div>
-            <p className="text-3xl sm:text-4xl font-bold">Rs. {totalDonations.toLocaleString()}</p>
-            <p className="text-emerald-100 text-sm mt-2">{donations.length} entries</p>
+            <p className="text-4xl font-bold text-gray-900 mb-2">Rs. {totalDonations.toLocaleString()}</p>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <p className="text-green-700 font-semibold">Good</p>
+            </div>
+            <p className="text-sm text-gray-600 mt-1">{donations.length} donations</p>
           </div>
 
-          <div className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl shadow-lg p-6 text-white">
-            <div className="flex items-center gap-3 mb-2">
-              <TrendingDown className="w-6 h-6 opacity-80" />
-              <span className="text-rose-50 text-sm font-medium">Total Expenses</span>
+          <div className="bg-rose-50 border-2 border-rose-200 rounded-xl shadow-md p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center">
+                <ShoppingCart className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-medium">Money Spent</p>
+              </div>
             </div>
-            <p className="text-3xl sm:text-4xl font-bold">Rs. {totalExpenses.toLocaleString()}</p>
-            <p className="text-rose-100 text-sm mt-2">{expenses.length} entries</p>
+            <p className="text-4xl font-bold text-gray-900 mb-2">Rs. {totalExpenses.toLocaleString()}</p>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <p className="text-green-700 font-semibold">Tracked</p>
+            </div>
+            <p className="text-sm text-gray-600 mt-1">{expenses.length} expenses</p>
           </div>
 
-          <div className={`bg-gradient-to-br rounded-xl shadow-lg p-6 text-white ${
-            balance >= 0 ? 'from-blue-500 to-blue-600' : 'from-amber-500 to-amber-600'
+          <div className={`rounded-xl shadow-md p-6 border-2 ${
+            balance > totalDonations * 0.3
+              ? 'bg-green-50 border-green-200'
+              : balance > 0
+              ? 'bg-yellow-50 border-yellow-200'
+              : 'bg-red-50 border-red-200'
           }`}>
-            <div className="flex items-center gap-3 mb-2">
-              <Wallet className="w-6 h-6 opacity-80" />
-              <span className="opacity-90 text-sm font-medium">Current Balance</span>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                balance > totalDonations * 0.3
+                  ? 'bg-green-500'
+                  : balance > 0
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
+              }`}>
+                <Wallet className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-medium">Money Left</p>
+              </div>
             </div>
-            <p className="text-3xl sm:text-4xl font-bold">Rs. {balance.toLocaleString()}</p>
-            <p className={`text-sm mt-2 ${balance >= 0 ? 'text-blue-100' : 'text-amber-100'}`}>
-              {balance >= 0 ? 'Funds available' : 'Deficit'}
-            </p>
+            <p className="text-4xl font-bold text-gray-900 mb-2">Rs. {balance.toLocaleString()}</p>
+            <div className="flex items-center gap-2">
+              {balance > totalDonations * 0.3 ? (
+                <>
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <p className="text-green-700 font-semibold">Good</p>
+                </>
+              ) : balance > 0 ? (
+                <>
+                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                  <p className="text-yellow-700 font-semibold">Needs Review</p>
+                </>
+              ) : (
+                <>
+                  <AlertCircle className="w-5 h-5 text-red-600" />
+                  <p className="text-red-700 font-semibold">Low Balance</p>
+                </>
+              )}
+            </div>
+            <p className="text-sm text-gray-600 mt-1">(Received - Spent)</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-6 mb-6 sm:mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Money Overview</h3>
+          <div className="space-y-4">
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">Money Received</span>
+                <span className="text-sm font-bold text-gray-900">Rs. {totalDonations.toLocaleString()}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-6">
+                <div
+                  className="bg-green-500 h-6 rounded-full flex items-center justify-end pr-2"
+                  style={{ width: '100%' }}
+                >
+                  <span className="text-xs font-semibold text-white">100%</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">Money Spent</span>
+                <span className="text-sm font-bold text-gray-900">Rs. {totalExpenses.toLocaleString()}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-6">
+                <div
+                  className="bg-rose-500 h-6 rounded-full flex items-center justify-end pr-2"
+                  style={{ width: totalDonations > 0 ? `${Math.min((totalExpenses / totalDonations) * 100, 100)}%` : '0%' }}
+                >
+                  {totalExpenses > 0 && (
+                    <span className="text-xs font-semibold text-white">
+                      {totalDonations > 0 ? Math.round((totalExpenses / totalDonations) * 100) : 0}%
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-200">
+              <p className="text-center text-lg">
+                {totalDonations > 0 ? (
+                  <>
+                    <span className="font-semibold text-gray-900">
+                      You have used {Math.round((totalExpenses / totalDonations) * 100)}% of donations
+                    </span>
+                    {totalExpenses > totalDonations && (
+                      <span className="block text-sm text-red-600 mt-1">
+                        Spending is {Math.round(((totalExpenses - totalDonations) / totalDonations) * 100)}% over donations
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-gray-600">No donations received yet</span>
+                )}
+              </p>
+            </div>
           </div>
         </div>
 
