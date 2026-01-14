@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, Organization } from '../lib/supabase';
-import { LogOut, Plus, Eye } from 'lucide-react';
+import { LogOut, Plus, Eye, CheckCircle, XCircle } from 'lucide-react';
 import Dashboard from './Dashboard';
+import { useToast } from '../hooks/useToast';
+import Toast from './Toast';
 
 export default function NewAdminPanel() {
   const { user, signOut } = useAuth();
+  const { toast, showToast } = useToast();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,10 +18,43 @@ export default function NewAdminPanel() {
     contact_phone: '',
     raast_phone_number: '',
   });
+  const [touched, setTouched] = useState({
+    name: false,
+    contact_phone: false,
+    raast_phone_number: false,
+  });
 
   useEffect(() => {
     loadOrganizations();
   }, []);
+
+  const validateName = (name: string): string => {
+    if (!name.trim()) return 'Mosque name is required';
+    if (name.trim().length < 3) return 'Mosque name must be at least 3 characters';
+    return '';
+  };
+
+  const validatePhone = (phone: string): string => {
+    if (!phone.trim()) return 'Phone number is required';
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length < 11) return 'Phone number must be at least 11 digits';
+    if (cleaned.length > 11) return 'Phone number must be 11 digits';
+    if (!cleaned.startsWith('03')) return 'Phone number must start with 03';
+    return '';
+  };
+
+  const validateRaastPhone = (phone: string): string => {
+    if (!phone.trim()) return '';
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length < 11) return 'Phone number must be at least 11 digits';
+    if (cleaned.length > 11) return 'Phone number must be 11 digits';
+    if (!cleaned.startsWith('03')) return 'Phone number must start with 03';
+    return '';
+  };
+
+  const nameError = touched.name ? validateName(formData.name) : '';
+  const contactPhoneError = touched.contact_phone ? validatePhone(formData.contact_phone) : '';
+  const raastPhoneError = touched.raast_phone_number ? validateRaastPhone(formData.raast_phone_number) : '';
 
   const loadOrganizations = async () => {
     try {
@@ -43,11 +79,26 @@ export default function NewAdminPanel() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setTouched({
+      name: true,
+      contact_phone: true,
+      raast_phone_number: true,
+    });
+
+    const nameValidation = validateName(formData.name);
+    const contactPhoneValidation = validatePhone(formData.contact_phone);
+    const raastPhoneValidation = validateRaastPhone(formData.raast_phone_number);
+
+    if (nameValidation || contactPhoneValidation || raastPhoneValidation) {
+      showToast('Please fix the errors before submitting', 'error');
+      return;
+    }
+
     try {
       const orgData = {
         name: formData.name,
         contact_phone: formData.contact_phone,
-        raast_phone_number: formData.raast_phone_number,
+        raast_phone_number: formData.raast_phone_number || null,
         user_id: user?.id,
       };
 
@@ -55,16 +106,22 @@ export default function NewAdminPanel() {
 
       if (error) throw error;
 
+      showToast('Mosque created successfully!', 'success');
       setShowForm(false);
       setFormData({
         name: '',
         contact_phone: '',
         raast_phone_number: '',
       });
+      setTouched({
+        name: false,
+        contact_phone: false,
+        raast_phone_number: false,
+      });
       loadOrganizations();
     } catch (error) {
       console.error('Error saving organization:', error);
-      alert('Error saving organization. Please check your inputs.');
+      showToast('Error saving organization. Please try again.', 'error');
     }
   };
 
@@ -82,6 +139,7 @@ export default function NewAdminPanel() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Toast {...toast} />
       <div className="container mx-auto px-6 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -108,57 +166,127 @@ export default function NewAdminPanel() {
         )}
 
         {showForm && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">New Mosque</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">New Mosque</h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Mosque Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="mosque-name" className="block text-xl font-bold text-gray-900 mb-3">
                   Mosque Name *
                 </label>
                 <input
+                  id="mosque-name"
                   type="text"
-                  required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  onBlur={() => setTouched({ ...touched, name: true })}
+                  className={`w-full px-5 py-4 min-h-[56px] text-lg border-2 rounded-xl focus:outline-none focus:ring-4 transition-all ${
+                    nameError
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200 bg-red-50'
+                      : touched.name && formData.name
+                      ? 'border-green-400 focus:border-green-500 focus:ring-green-200 bg-green-50'
+                      : 'border-gray-300 focus:border-green-500 focus:ring-green-200'
+                  }`}
                   placeholder="Masjid Al-Noor"
+                  aria-describedby={nameError ? 'name-error' : touched.name && formData.name ? 'name-success' : undefined}
+                  aria-invalid={!!nameError}
                 />
+                {nameError && (
+                  <div id="name-error" className="mt-3 bg-red-50 border-2 border-red-300 rounded-lg p-3 flex items-start gap-2" role="alert">
+                    <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <p className="text-red-700 text-base font-medium">{nameError}</p>
+                  </div>
+                )}
+                {touched.name && !nameError && formData.name && (
+                  <div id="name-success" className="mt-3 bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-start gap-2">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <p className="text-green-700 text-base font-medium">Looks good!</p>
+                  </div>
+                )}
               </div>
 
+              {/* Contact Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="contact-phone" className="block text-xl font-bold text-gray-900 mb-3">
                   Contact Phone *
                 </label>
                 <input
+                  id="contact-phone"
                   type="tel"
-                  required
                   value={formData.contact_phone}
                   onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
-                  className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  onBlur={() => setTouched({ ...touched, contact_phone: true })}
+                  className={`w-full px-5 py-4 min-h-[56px] text-lg border-2 rounded-xl focus:outline-none focus:ring-4 transition-all ${
+                    contactPhoneError
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200 bg-red-50'
+                      : touched.contact_phone && formData.contact_phone
+                      ? 'border-green-400 focus:border-green-500 focus:ring-green-200 bg-green-50'
+                      : 'border-gray-300 focus:border-green-500 focus:ring-green-200'
+                  }`}
                   placeholder="03001234567"
+                  aria-describedby={contactPhoneError ? 'contact-error' : touched.contact_phone && formData.contact_phone ? 'contact-success' : 'contact-help'}
+                  aria-invalid={!!contactPhoneError}
                 />
+                <p id="contact-help" className="text-sm text-gray-600 mt-2">
+                  Your main contact number for mosque administration
+                </p>
+                {contactPhoneError && (
+                  <div id="contact-error" className="mt-3 bg-red-50 border-2 border-red-300 rounded-lg p-3 flex items-start gap-2" role="alert">
+                    <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <p className="text-red-700 text-base font-medium">{contactPhoneError}</p>
+                  </div>
+                )}
+                {touched.contact_phone && !contactPhoneError && formData.contact_phone && (
+                  <div id="contact-success" className="mt-3 bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-start gap-2">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <p className="text-green-700 text-base font-medium">Looks good!</p>
+                  </div>
+                )}
               </div>
 
+              {/* RAAST Phone Number */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  RAAST Phone Number (for QR code)
+                <label htmlFor="raast-phone" className="block text-xl font-bold text-gray-900 mb-3">
+                  RAAST Phone Number (Optional)
                 </label>
                 <input
+                  id="raast-phone"
                   type="tel"
                   value={formData.raast_phone_number}
                   onChange={(e) => setFormData({ ...formData, raast_phone_number: e.target.value })}
-                  className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  onBlur={() => setTouched({ ...touched, raast_phone_number: true })}
+                  className={`w-full px-5 py-4 min-h-[56px] text-lg border-2 rounded-xl focus:outline-none focus:ring-4 transition-all ${
+                    raastPhoneError
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200 bg-red-50'
+                      : touched.raast_phone_number && formData.raast_phone_number
+                      ? 'border-green-400 focus:border-green-500 focus:ring-green-200 bg-green-50'
+                      : 'border-gray-300 focus:border-green-500 focus:ring-green-200'
+                  }`}
                   placeholder="03001234567"
+                  aria-describedby={raastPhoneError ? 'raast-error' : touched.raast_phone_number && formData.raast_phone_number ? 'raast-success' : 'raast-help'}
+                  aria-invalid={!!raastPhoneError}
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  Phone number for receiving RAAST donations
+                <p id="raast-help" className="text-sm text-gray-600 mt-2">
+                  Phone number for receiving RAAST donations via QR code
                 </p>
+                {raastPhoneError && (
+                  <div id="raast-error" className="mt-3 bg-red-50 border-2 border-red-300 rounded-lg p-3 flex items-start gap-2" role="alert">
+                    <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <p className="text-red-700 text-base font-medium">{raastPhoneError}</p>
+                  </div>
+                )}
+                {touched.raast_phone_number && !raastPhoneError && formData.raast_phone_number && (
+                  <div id="raast-success" className="mt-3 bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-start gap-2">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <p className="text-green-700 text-base font-medium">Looks good!</p>
+                  </div>
+                )}
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-3 pt-4">
                 <button
                   type="submit"
-                  className="px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+                  className="px-8 py-4 min-h-[56px] bg-green-700 text-white rounded-xl text-lg hover:bg-green-800 transition-colors font-bold shadow-md"
                 >
                   Create Mosque
                 </button>
@@ -171,8 +299,13 @@ export default function NewAdminPanel() {
                       contact_phone: '',
                       raast_phone_number: '',
                     });
+                    setTouched({
+                      name: false,
+                      contact_phone: false,
+                      raast_phone_number: false,
+                    });
                   }}
-                  className="px-6 py-3 min-h-[50px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                  className="px-8 py-4 min-h-[56px] bg-gray-200 text-gray-800 rounded-xl text-lg hover:bg-gray-300 transition-colors font-bold"
                 >
                   Cancel
                 </button>
