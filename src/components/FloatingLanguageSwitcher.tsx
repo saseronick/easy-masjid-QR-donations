@@ -41,9 +41,9 @@ export default function FloatingLanguageSwitcher({ currentLanguage, onLanguageCh
   };
 
   return (
-    <div ref={containerRef} className="fixed bottom-6 right-6 z-50">
+    <div ref={containerRef} className="fixed bottom-4 right-4 z-40">
       {isOpen && (
-        <div className="absolute bottom-20 right-0 bg-white rounded-xl shadow-2xl border-2 border-gray-200 overflow-hidden min-w-[200px]">
+        <div className="absolute bottom-full mb-3 right-0 bg-white rounded-xl shadow-2xl border-2 border-gray-200 overflow-hidden min-w-[200px]">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -61,10 +61,11 @@ export default function FloatingLanguageSwitcher({ currentLanguage, onLanguageCh
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-green-700 hover:bg-green-800 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-green-300"
+        className="w-14 h-14 bg-green-700 hover:bg-green-800 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-green-300"
         aria-label="Change language"
+        title="Change language"
       >
-        <span className="text-2xl">{currentLang.flag}</span>
+        <span className="text-xl">{currentLang.flag}</span>
       </button>
     </div>
   );

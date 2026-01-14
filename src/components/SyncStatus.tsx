@@ -42,7 +42,7 @@ export default function SyncStatus() {
 
   if (!isOnline) {
     return (
-      <div className="fixed bottom-4 right-4 bg-amber-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50 max-w-sm">
+      <div className="fixed bottom-20 right-4 bg-amber-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50 max-w-sm">
         <CloudOff className="w-5 h-5 flex-shrink-0" />
         <div className="flex-1">
           <p className="font-medium text-sm">Offline Mode</p>
@@ -58,7 +58,7 @@ export default function SyncStatus() {
 
   if (status.pendingCount === 0 && !status.isSyncing && !status.error) {
     return (
-      <div className="fixed bottom-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50">
+      <div className="fixed bottom-20 right-4 bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50">
         <Cloud className="w-4 h-4" />
         <span className="text-sm font-medium">Synced</span>
       </div>
@@ -66,7 +66,7 @@ export default function SyncStatus() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 max-w-sm">
+    <div className="fixed bottom-20 right-4 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 max-w-sm">
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 mt-0.5">
           {status.isSyncing ? (
