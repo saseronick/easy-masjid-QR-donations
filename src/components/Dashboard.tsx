@@ -398,10 +398,20 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 <div className="space-y-3">
                   {donations.map((donation) => (
                     <div key={donation.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {donation.donor_name || 'Anonymous'}
-                        </p>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-gray-900">
+                            {donation.donor_name || 'Anonymous'}
+                          </p>
+                          {!donation.synced && (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded-full">
+                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                              </svg>
+                              Saved Locally - Will Sync
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-gray-600">{donation.date}</p>
                         {donation.notes && (
                           <p className="text-sm text-gray-500 mt-1">{donation.notes}</p>
@@ -432,8 +442,18 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 <div className="space-y-3">
                   {expenses.map((expense) => (
                     <div key={expense.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div>
-                        <p className="font-medium text-gray-900">{expense.purpose}</p>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-gray-900">{expense.purpose}</p>
+                          {!expense.synced && (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded-full">
+                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                              </svg>
+                              Saved Locally - Will Sync
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-gray-600">{expense.date}</p>
                         {expense.notes && (
                           <p className="text-sm text-gray-500 mt-1">{expense.notes}</p>

@@ -18,10 +18,25 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
   const [qrPrintDataUrl, setQrPrintDataUrl] = useState<string>('');
   const [showShareTip, setShowShareTip] = useState(false);
   const [showAccountPrompt, setShowAccountPrompt] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isFromCache, setIsFromCache] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const generatePaymentUrl = () => {
     const { method, identifier, name } = paymentInfo;
@@ -40,13 +55,16 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
     const generateQRs = async () => {
       try {
         const paymentUrl = generatePaymentUrl();
-        const id = `${paymentInfo.method}-${paymentInfo.identifier}-${Date.now()}`;
+        const cacheId = `${paymentInfo.method}-${paymentInfo.identifier.replace(/\D/g, '')}`;
 
-        const existingPayment = await db.getPaymentInfo(id);
-        if (existingPayment) {
-          setQrDataUrl(existingPayment.qrCodeData);
+        const cachedQR = localStorage.getItem(`qr-${cacheId}`);
+        if (cachedQR) {
+          setQrDataUrl(cachedQR);
+          setIsFromCache(true);
+          await generatePrintQR(paymentUrl, cacheId);
           return;
         }
+        setIsFromCache(false);
 
         const dataUrl = await QRCode.toDataURL(paymentUrl, {
           width: 350,
@@ -58,8 +76,11 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
         });
         setQrDataUrl(dataUrl);
 
+        localStorage.setItem(`qr-${cacheId}`, dataUrl);
+
+        const uniqueId = `${cacheId}-${Date.now()}`;
         const paymentData: DBPaymentInfo = {
-          id,
+          id: uniqueId,
           organizationName: paymentInfo.name,
           amount: 0,
           purpose: 'Donation',
@@ -72,7 +93,7 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
 
         await db.addPaymentInfo(paymentData);
 
-        await generatePrintQR(paymentUrl, id);
+        await generatePrintQR(paymentUrl, cacheId);
       } catch (error) {
         console.error('Error generating QR code:', error);
       }
@@ -191,6 +212,26 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
 
   return (
     <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
+      {(!isOnline || isFromCache) && (
+        <div className="mb-4 bg-amber-50 border-2 border-amber-400 rounded-lg p-4 flex items-start gap-3">
+          <div className="flex-shrink-0 mt-0.5">
+            <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="font-bold text-amber-900 text-lg mb-1">
+              {!isOnline ? 'Offline Mode' : 'From Cache'}
+            </h3>
+            <p className="text-amber-800 text-sm">
+              {!isOnline
+                ? 'You are offline. This QR code was generated from cached data and works perfectly offline.'
+                : 'This QR code was loaded from your device cache for instant display.'}
+            </p>
+          </div>
+        </div>
+      )}
+
       <button
         onClick={onBack}
         className="min-h-[70px] px-6 py-4 rounded-xl text-lg font-bold border-3 border-gray-400 bg-white text-gray-800 hover:bg-gray-100 active:bg-gray-200 flex items-center gap-3 transition-all mb-6 shadow-sm"
