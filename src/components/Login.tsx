@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { LogIn } from 'lucide-react';
+import { LogIn, CheckCircle, XCircle } from 'lucide-react';
 
 export default function Login() {
   const { signIn, signUp } = useAuth();
@@ -9,9 +9,72 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
+  const validateEmail = (email: string): string => {
+    if (!email.trim()) {
+      return 'Email is required';
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email (e.g., name@example.com)';
+    }
+    return '';
+  };
+
+  const validatePassword = (password: string): string => {
+    if (!password) {
+      return 'Password is required';
+    }
+    if (password.length < 6) {
+      return `Password must be at least 6 characters (currently ${password.length})`;
+    }
+    return '';
+  };
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    if (emailTouched) {
+      setEmailError(validateEmail(value));
+    }
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    if (passwordTouched) {
+      setPasswordError(validatePassword(value));
+    }
+  };
+
+  const handleEmailBlur = () => {
+    setEmailTouched(true);
+    setEmailError(validateEmail(email));
+  };
+
+  const handlePasswordBlur = () => {
+    setPasswordTouched(true);
+    setPasswordError(validatePassword(password));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setEmailTouched(true);
+    setPasswordTouched(true);
+
+    const emailValidationError = validateEmail(email);
+    const passwordValidationError = validatePassword(password);
+
+    setEmailError(emailValidationError);
+    setPasswordError(passwordValidationError);
+
+    if (emailValidationError || passwordValidationError) {
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -21,10 +84,18 @@ export default function Login() {
         : await signIn(email, password);
 
       if (error) {
-        setError(error.message || 'Authentication failed');
+        if (error.message.includes('Invalid login credentials')) {
+          setError('Wrong email or password. Please check and try again.');
+        } else if (error.message.includes('Email not confirmed')) {
+          setError('Please check your email and confirm your account.');
+        } else if (error.message.includes('User already registered')) {
+          setError('This email is already registered. Try signing in instead.');
+        } else {
+          setError(error.message || 'Could not sign in. Please try again.');
+        }
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      setError('Something went wrong. Please check your internet and try again.');
     } finally {
       setLoading(false);
     }
@@ -47,42 +118,106 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 border border-red-300 text-red-800 rounded-lg p-3 text-sm">
-              {error}
+            <div className="bg-red-50 border-2 border-red-300 rounded-lg p-4 flex items-start gap-3">
+              <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+              <p className="text-red-800 text-sm font-medium">{error}</p>
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Email
             </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="admin@example.com"
-            />
+            <p className="text-sm text-gray-600 mb-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
+              Example: admin@example.com
+            </p>
+            <div className="relative">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => handleEmailChange(e.target.value)}
+                onBlur={handleEmailBlur}
+                className={`w-full px-4 py-3 pr-12 min-h-[48px] border-2 rounded-lg focus:ring-2 focus:outline-none transition-colors ${
+                  emailTouched && !emailError && email
+                    ? 'border-green-500 focus:border-green-600 focus:ring-green-200'
+                    : emailError
+                    ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                    : 'border-gray-300 focus:border-green-500 focus:ring-green-200'
+                }`}
+                placeholder="admin@example.com"
+              />
+              {emailTouched && email && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  {emailError ? (
+                    <XCircle className="w-6 h-6 text-red-500" />
+                  ) : (
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                  )}
+                </div>
+              )}
+            </div>
+            {emailError && (
+              <div className="mt-2 bg-red-50 border-2 border-red-300 rounded-lg p-2 flex items-start gap-2">
+                <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-red-700 text-sm font-medium">{emailError}</p>
+              </div>
+            )}
+            {emailTouched && !emailError && email && (
+              <div className="mt-2 bg-green-50 border-2 border-green-300 rounded-lg p-2 flex items-start gap-2">
+                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <p className="text-green-700 text-sm font-medium">Correct email!</p>
+              </div>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Password
             </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="••••••••"
-              minLength={6}
-            />
             {isSignUp && (
-              <p className="text-xs text-gray-500 mt-1">
-                Minimum 6 characters
+              <p className="text-sm text-gray-600 mb-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
+                Must be at least 6 characters
               </p>
+            )}
+            <div className="relative">
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => handlePasswordChange(e.target.value)}
+                onBlur={handlePasswordBlur}
+                className={`w-full px-4 py-3 pr-12 min-h-[48px] border-2 rounded-lg focus:ring-2 focus:outline-none transition-colors ${
+                  passwordTouched && !passwordError && password
+                    ? 'border-green-500 focus:border-green-600 focus:ring-green-200'
+                    : passwordError
+                    ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                    : 'border-gray-300 focus:border-green-500 focus:ring-green-200'
+                }`}
+                placeholder="••••••••"
+                minLength={6}
+              />
+              {passwordTouched && password && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  {passwordError ? (
+                    <XCircle className="w-6 h-6 text-red-500" />
+                  ) : (
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                  )}
+                </div>
+              )}
+            </div>
+            {passwordError && (
+              <div className="mt-2 bg-red-50 border-2 border-red-300 rounded-lg p-2 flex items-start gap-2">
+                <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-red-700 text-sm font-medium">{passwordError}</p>
+              </div>
+            )}
+            {passwordTouched && !passwordError && password && (
+              <div className="mt-2 bg-green-50 border-2 border-green-300 rounded-lg p-2 flex items-start gap-2">
+                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <p className="text-green-700 text-sm font-medium">Password is strong!</p>
+              </div>
             )}
           </div>
 

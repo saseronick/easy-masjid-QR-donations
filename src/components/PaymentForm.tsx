@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Smartphone } from 'lucide-react';
+import { Smartphone, CheckCircle, XCircle } from 'lucide-react';
 import { PaymentMethod, PaymentInfo, Language } from '../types';
 import { translations } from '../data/translations';
 
@@ -185,31 +185,56 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
-          <label htmlFor="payment-identifier" className="block text-xl font-bold text-gray-900 mb-3">
+          <label htmlFor="payment-identifier" className="block text-xl font-bold text-gray-900 mb-2">
             {t('step2Mobile')}
           </label>
-          <input
-            id="payment-identifier"
-            type="tel"
-            value={identifier}
-            onChange={(e) => handleIdentifierChange(e.target.value)}
-            onBlur={handleIdentifierBlur}
-            required
-            aria-required="true"
-            aria-invalid={identifierError ? 'true' : 'false'}
-            aria-describedby={identifierError ? 'identifier-error' : undefined}
-            placeholder="03001234567"
-            className={`w-full px-5 py-4 text-xl border-3 rounded-xl focus:outline-none focus:ring-4 transition-colors ${
-              identifierError
-                ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
-                : 'border-gray-300 focus:border-green-700 focus:ring-green-200'
-            }`}
-            dir="ltr"
-          />
+          <p className="text-base text-gray-600 mb-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+            {language === 'ur' ? 'مثال: 0300-1234567' : 'Example: 0300-1234567'}
+          </p>
+          <div className="relative">
+            <input
+              id="payment-identifier"
+              type="tel"
+              value={identifier}
+              onChange={(e) => handleIdentifierChange(e.target.value)}
+              onBlur={handleIdentifierBlur}
+              required
+              aria-required="true"
+              aria-invalid={identifierError ? 'true' : 'false'}
+              aria-describedby={identifierError ? 'identifier-error identifier-helper' : 'identifier-helper'}
+              placeholder="03001234567"
+              className={`w-full px-5 py-4 pr-14 text-xl border-3 rounded-xl focus:outline-none focus:ring-4 transition-colors ${
+                identifierTouched && !identifierError && identifier
+                  ? 'border-green-500 focus:border-green-600 focus:ring-green-200'
+                  : identifierError
+                  ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                  : 'border-gray-300 focus:border-green-700 focus:ring-green-200'
+              }`}
+              dir="ltr"
+            />
+            {identifierTouched && identifier && (
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                {identifierError ? (
+                  <XCircle className="w-8 h-8 text-red-500" aria-hidden="true" />
+                ) : (
+                  <CheckCircle className="w-8 h-8 text-green-500" aria-hidden="true" />
+                )}
+              </div>
+            )}
+          </div>
           {identifierError && (
-            <p id="identifier-error" className="mt-2 text-red-700 text-base font-medium" role="alert">
-              {identifierError}
-            </p>
+            <div id="identifier-error" className="mt-3 bg-red-50 border-2 border-red-300 rounded-lg p-3 flex items-start gap-2" role="alert">
+              <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-red-700 text-base font-medium">{identifierError}</p>
+            </div>
+          )}
+          {identifierTouched && !identifierError && identifier && (
+            <div id="identifier-helper" className="mt-3 bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-start gap-2">
+              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-green-700 text-base font-medium">
+                {language === 'ur' ? 'درست نمبر!' : 'Correct number!'}
+              </p>
+            </div>
           )}
         </div>
 
@@ -217,28 +242,50 @@ export default function PaymentForm({ language, onSubmit }: PaymentFormProps) {
           <label htmlFor="organization-name" className="block text-xl font-bold text-gray-900 mb-3">
             {t('step3Masjid')}
           </label>
-          <input
-            id="organization-name"
-            type="text"
-            value={name}
-            onChange={(e) => handleNameChange(e.target.value)}
-            onBlur={handleNameBlur}
-            required
-            aria-required="true"
-            aria-invalid={nameError ? 'true' : 'false'}
-            aria-describedby={nameError ? 'name-error' : undefined}
-            placeholder={t('masjidNamePlaceholder')}
-            className={`w-full px-5 py-4 text-xl border-3 rounded-xl focus:outline-none focus:ring-4 transition-colors ${
-              nameError
-                ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
-                : 'border-gray-300 focus:border-green-700 focus:ring-green-200'
-            } ${isRTL ? 'text-right' : 'text-left'}`}
-            dir={isRTL ? 'rtl' : 'ltr'}
-          />
+          <div className="relative">
+            <input
+              id="organization-name"
+              type="text"
+              value={name}
+              onChange={(e) => handleNameChange(e.target.value)}
+              onBlur={handleNameBlur}
+              required
+              aria-required="true"
+              aria-invalid={nameError ? 'true' : 'false'}
+              aria-describedby={nameError ? 'name-error' : undefined}
+              placeholder={t('masjidNamePlaceholder')}
+              className={`w-full px-5 py-4 pr-14 text-xl border-3 rounded-xl focus:outline-none focus:ring-4 transition-colors ${
+                nameTouched && !nameError && name
+                  ? 'border-green-500 focus:border-green-600 focus:ring-green-200'
+                  : nameError
+                  ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                  : 'border-gray-300 focus:border-green-700 focus:ring-green-200'
+              } ${isRTL ? 'text-right' : 'text-left'}`}
+              dir={isRTL ? 'rtl' : 'ltr'}
+            />
+            {nameTouched && name && (
+              <div className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2`}>
+                {nameError ? (
+                  <XCircle className="w-8 h-8 text-red-500" aria-hidden="true" />
+                ) : (
+                  <CheckCircle className="w-8 h-8 text-green-500" aria-hidden="true" />
+                )}
+              </div>
+            )}
+          </div>
           {nameError && (
-            <p id="name-error" className="mt-2 text-red-700 text-base font-medium" role="alert">
-              {nameError}
-            </p>
+            <div id="name-error" className="mt-3 bg-red-50 border-2 border-red-300 rounded-lg p-3 flex items-start gap-2" role="alert">
+              <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-red-700 text-base font-medium">{nameError}</p>
+            </div>
+          )}
+          {nameTouched && !nameError && name && (
+            <div className="mt-3 bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-start gap-2">
+              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-green-700 text-base font-medium">
+                {language === 'ur' ? 'درست نام!' : 'Correct name!'}
+              </p>
+            </div>
           )}
         </div>
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase, Organization, Donation, Expense } from '../lib/supabase';
-import { Plus, Download, X, TrendingUp, TrendingDown, Wallet, Receipt, ArrowLeft, DollarSign, ShoppingCart, CheckCircle, AlertTriangle, AlertCircle } from 'lucide-react';
+import { Plus, Download, X, TrendingUp, TrendingDown, Wallet, Receipt, ArrowLeft, DollarSign, ShoppingCart, CheckCircle, AlertTriangle, AlertCircle, XCircle } from 'lucide-react';
 import { DashboardSkeleton } from './LoadingSkeleton';
 import { offlineStorage } from '../services/offlineStorage';
 import { syncQueue } from '../services/syncQueue';
@@ -33,6 +33,40 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
     notes: '',
     date: new Date().toISOString().split('T')[0],
   });
+
+  const [donationAmountError, setDonationAmountError] = useState('');
+  const [expenseAmountError, setExpenseAmountError] = useState('');
+  const [expensePurposeError, setExpensePurposeError] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successType, setSuccessType] = useState<'donation' | 'expense'>('donation');
+  const [successAmount, setSuccessAmount] = useState('');
+
+  const validateAmount = (amount: string): string => {
+    if (!amount.trim()) {
+      return 'Amount is required';
+    }
+    const num = parseFloat(amount);
+    if (isNaN(num)) {
+      return 'Please enter a valid number';
+    }
+    if (num <= 0) {
+      return 'Amount must be greater than 0';
+    }
+    if (num > 1000000000) {
+      return 'Amount is too large';
+    }
+    return '';
+  };
+
+  const validatePurpose = (purpose: string): string => {
+    if (!purpose.trim()) {
+      return 'Purpose is required';
+    }
+    if (purpose.trim().length < 3) {
+      return 'Purpose is too short (minimum 3 characters)';
+    }
+    return '';
+  };
 
   useEffect(() => {
     loadData();
@@ -80,6 +114,14 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
 
   const handleAddDonation = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const amountError = validateAmount(donationForm.amount);
+    setDonationAmountError(amountError);
+
+    if (amountError) {
+      return;
+    }
+
     setSubmitting(true);
     try {
       const donationData = {
@@ -102,16 +144,22 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
       }
 
       setShowDonationModal(false);
+      setSuccessType('donation');
+      setSuccessAmount(donationForm.amount);
+      setShowSuccessMessage(true);
+      setTimeout(() => setShowSuccessMessage(false), 5000);
+
       setDonationForm({
         amount: '',
         donor_name: '',
         notes: '',
         date: new Date().toISOString().split('T')[0],
       });
+      setDonationAmountError('');
       loadData();
     } catch (error) {
       console.error('Error adding donation:', error);
-      alert('Error adding donation');
+      alert('Could not save donation. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -119,6 +167,16 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
 
   const handleAddExpense = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const amountError = validateAmount(expenseForm.amount);
+    const purposeError = validatePurpose(expenseForm.purpose);
+    setExpenseAmountError(amountError);
+    setExpensePurposeError(purposeError);
+
+    if (amountError || purposeError) {
+      return;
+    }
+
     setSubmitting(true);
     try {
       const expenseData = {
@@ -139,16 +197,23 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
       }
 
       setShowExpenseModal(false);
+      setSuccessType('expense');
+      setSuccessAmount(expenseForm.amount);
+      setShowSuccessMessage(true);
+      setTimeout(() => setShowSuccessMessage(false), 5000);
+
       setExpenseForm({
         amount: '',
         purpose: '',
         notes: '',
         date: new Date().toISOString().split('T')[0],
       });
+      setExpenseAmountError('');
+      setExpensePurposeError('');
       loadData();
     } catch (error) {
       console.error('Error adding expense:', error);
-      alert('Error adding expense');
+      alert('Could not save expense. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -358,6 +423,34 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
             </div>
           </div>
         </div>
+
+        {showSuccessMessage && (
+          <div className="bg-green-50 border-2 border-green-300 rounded-xl p-6 mb-6 sm:mb-8 shadow-md">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-7 h-7 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {successType === 'donation' ? 'Donation Saved Successfully!' : 'Expense Saved Successfully!'}
+                </h3>
+                <p className="text-gray-700 mb-3">
+                  {successType === 'donation'
+                    ? `You recorded a donation of Rs. ${parseFloat(successAmount).toLocaleString()}`
+                    : `You recorded an expense of Rs. ${parseFloat(successAmount).toLocaleString()}`}
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowSuccessMessage(false)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                  >
+                    Got it
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {isFirstTime && (
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-6 sm:p-8 mb-6 sm:mb-8">
@@ -597,16 +690,51 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Amount (PKR) *
                   </label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    step="0.01"
-                    value={donationForm.amount}
-                    onChange={(e) => setDonationForm({ ...donationForm, amount: e.target.value })}
-                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="0.00"
-                  />
+                  <p className="text-sm text-gray-600 mb-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
+                    Example: 1000 or 500.50
+                  </p>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      step="0.01"
+                      value={donationForm.amount}
+                      onChange={(e) => {
+                        setDonationForm({ ...donationForm, amount: e.target.value });
+                        setDonationAmountError(validateAmount(e.target.value));
+                      }}
+                      className={`w-full px-4 py-3 pr-12 min-h-[48px] border-2 rounded-lg focus:ring-2 focus:outline-none transition-colors ${
+                        donationForm.amount && !donationAmountError
+                          ? 'border-green-500 focus:border-green-600 focus:ring-green-200'
+                          : donationAmountError
+                          ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                          : 'border-gray-300 focus:border-emerald-500 focus:ring-emerald-200'
+                      }`}
+                      placeholder="0.00"
+                    />
+                    {donationForm.amount && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        {donationAmountError ? (
+                          <XCircle className="w-6 h-6 text-red-500" />
+                        ) : (
+                          <CheckCircle className="w-6 h-6 text-green-500" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {donationAmountError && (
+                    <div className="mt-2 bg-red-50 border-2 border-red-300 rounded-lg p-2 flex items-start gap-2">
+                      <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-red-700 text-sm font-medium">{donationAmountError}</p>
+                    </div>
+                  )}
+                  {donationForm.amount && !donationAmountError && (
+                    <div className="mt-2 bg-green-50 border-2 border-green-300 rounded-lg p-2 flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-green-700 text-sm font-medium">Amount is valid!</p>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -693,29 +821,99 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Amount (PKR) *
                   </label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    step="0.01"
-                    value={expenseForm.amount}
-                    onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })}
-                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
-                    placeholder="0.00"
-                  />
+                  <p className="text-sm text-gray-600 mb-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
+                    Example: 1000 or 500.50
+                  </p>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      step="0.01"
+                      value={expenseForm.amount}
+                      onChange={(e) => {
+                        setExpenseForm({ ...expenseForm, amount: e.target.value });
+                        setExpenseAmountError(validateAmount(e.target.value));
+                      }}
+                      className={`w-full px-4 py-3 pr-12 min-h-[48px] border-2 rounded-lg focus:ring-2 focus:outline-none transition-colors ${
+                        expenseForm.amount && !expenseAmountError
+                          ? 'border-green-500 focus:border-green-600 focus:ring-green-200'
+                          : expenseAmountError
+                          ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                          : 'border-gray-300 focus:border-rose-500 focus:ring-rose-200'
+                      }`}
+                      placeholder="0.00"
+                    />
+                    {expenseForm.amount && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        {expenseAmountError ? (
+                          <XCircle className="w-6 h-6 text-red-500" />
+                        ) : (
+                          <CheckCircle className="w-6 h-6 text-green-500" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {expenseAmountError && (
+                    <div className="mt-2 bg-red-50 border-2 border-red-300 rounded-lg p-2 flex items-start gap-2">
+                      <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-red-700 text-sm font-medium">{expenseAmountError}</p>
+                    </div>
+                  )}
+                  {expenseForm.amount && !expenseAmountError && (
+                    <div className="mt-2 bg-green-50 border-2 border-green-300 rounded-lg p-2 flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-green-700 text-sm font-medium">Amount is valid!</p>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Purpose *
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={expenseForm.purpose}
-                    onChange={(e) => setExpenseForm({ ...expenseForm, purpose: e.target.value })}
-                    placeholder="e.g., Electricity Bill"
-                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
-                  />
+                  <p className="text-sm text-gray-600 mb-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
+                    Example: Electricity Bill, Food, Repairs
+                  </p>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      value={expenseForm.purpose}
+                      onChange={(e) => {
+                        setExpenseForm({ ...expenseForm, purpose: e.target.value });
+                        setExpensePurposeError(validatePurpose(e.target.value));
+                      }}
+                      placeholder="e.g., Electricity Bill"
+                      className={`w-full px-4 py-3 pr-12 min-h-[48px] border-2 rounded-lg focus:ring-2 focus:outline-none transition-colors ${
+                        expenseForm.purpose && !expensePurposeError
+                          ? 'border-green-500 focus:border-green-600 focus:ring-green-200'
+                          : expensePurposeError
+                          ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                          : 'border-gray-300 focus:border-rose-500 focus:ring-rose-200'
+                      }`}
+                    />
+                    {expenseForm.purpose && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        {expensePurposeError ? (
+                          <XCircle className="w-6 h-6 text-red-500" />
+                        ) : (
+                          <CheckCircle className="w-6 h-6 text-green-500" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {expensePurposeError && (
+                    <div className="mt-2 bg-red-50 border-2 border-red-300 rounded-lg p-2 flex items-start gap-2">
+                      <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-red-700 text-sm font-medium">{expensePurposeError}</p>
+                    </div>
+                  )}
+                  {expenseForm.purpose && !expensePurposeError && (
+                    <div className="mt-2 bg-green-50 border-2 border-green-300 rounded-lg p-2 flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-green-700 text-sm font-medium">Purpose is valid!</p>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
