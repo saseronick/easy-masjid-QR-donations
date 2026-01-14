@@ -8,7 +8,6 @@ import NewAdminPanel from './components/NewAdminPanel';
 import NetworkStatus from './components/NetworkStatus';
 import SyncStatus from './components/SyncStatus';
 import QRHistory from './components/QRHistory';
-import { AccessibilityReport } from './components/AccessibilityReport';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
 import { syncQueue } from './services/syncQueue';
@@ -22,7 +21,6 @@ function App() {
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [showReport, setShowReport] = useState(false);
   const [showQRHistory, setShowQRHistory] = useState(false);
 
   const t = (key: string) => translations[key]?.[language] || translations[key]?.en || key;
@@ -62,10 +60,6 @@ function App() {
     );
   }
 
-  if (showReport) {
-    return <AccessibilityReport />;
-  }
-
   if (showQRHistory) {
     return <QRHistory language={language} onClose={() => setShowQRHistory(false)} />;
   }
@@ -89,12 +83,6 @@ function App() {
             className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
           >
             View QR History
-          </button>
-          <button
-            onClick={() => setShowReport(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
-          >
-            Accessibility Report
           </button>
           <button
             onClick={() => setShowAdmin(true)}
