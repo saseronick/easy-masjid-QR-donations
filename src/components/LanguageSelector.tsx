@@ -8,9 +8,9 @@ interface LanguageSelectorProps {
 }
 
 const languages = [
-  { code: 'en' as Language, name: 'English', nativeName: 'English' },
-  { code: 'ur' as Language, name: 'Urdu', nativeName: 'اردو' },
-  { code: 'pa' as Language, name: 'Punjabi', nativeName: 'پنجابی' }
+  { code: 'en' as Language, name: 'English', nativeName: 'English', flag: '🇬🇧' },
+  { code: 'ur' as Language, name: 'Urdu', nativeName: 'اردو', flag: '🇵🇰' },
+  { code: 'pa' as Language, name: 'Punjabi', nativeName: 'پنجابی', flag: '🇵🇰' }
 ];
 
 export default function LanguageSelector({ currentLanguage, onLanguageChange }: LanguageSelectorProps) {
@@ -39,11 +39,11 @@ export default function LanguageSelector({ currentLanguage, onLanguageChange }: 
   };
 
   return (
-    <div className="mb-10" role="radiogroup" aria-labelledby="language-selector-label">
-      <h2 id="language-selector-label" className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <div className="mb-8" role="radiogroup" aria-labelledby="language-selector-label">
+      <h2 id="language-selector-label" className="text-3xl font-bold text-gray-800 mb-6 text-center">
         {t('chooseLanguage')} / {translations['chooseLanguage']['ur']}
       </h2>
-      <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto">
+      <div className="grid grid-cols-3 gap-5 max-w-4xl mx-auto">
         {languages.map((lang) => {
           const hasEnglishInLabel = /[A-Za-z]/.test(lang.nativeName);
           const isSelected = currentLanguage === lang.code;
@@ -57,13 +57,14 @@ export default function LanguageSelector({ currentLanguage, onLanguageChange }: 
               aria-checked={isSelected}
               aria-label={`${lang.name} - ${lang.nativeName}`}
               tabIndex={isSelected ? 0 : -1}
-              className={`min-h-[70px] px-6 py-5 rounded-xl text-xl font-bold transition-all border-3 focus:outline-none focus:ring-4 focus:ring-green-300 ${
+              className={`min-h-[85px] px-6 py-6 rounded-xl text-2xl font-bold transition-all border-3 focus:outline-none focus:ring-4 focus:ring-green-300 flex flex-col items-center justify-center gap-2 ${
                 isSelected
-                  ? 'bg-green-700 text-white border-green-700 shadow-lg'
+                  ? 'bg-green-700 text-white border-green-700 shadow-lg scale-105'
                   : 'text-gray-800 bg-white border-gray-400 hover:border-green-600 hover:bg-green-50 active:bg-green-100'
               } ${hasEnglishInLabel && isRTL ? 'atkinson-font' : ''}`}
             >
-              {lang.nativeName}
+              <span className="text-3xl">{lang.flag}</span>
+              <span>{lang.nativeName}</span>
               <span className="sr-only">
                 {isSelected ? ' (selected)' : ''}
               </span>

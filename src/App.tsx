@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import LanguageSelector from './components/LanguageSelector';
+import FloatingLanguageSwitcher from './components/FloatingLanguageSwitcher';
 import PaymentForm from './components/PaymentForm';
 import QRDisplay from './components/QRDisplay';
 import Login from './components/Login';
@@ -16,7 +17,17 @@ function App() {
   const { user, loading } = useAuth();
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem('preferredLanguage');
-    return (saved as Language) || 'en';
+    if (saved) return saved as Language;
+
+    const browserLang = navigator.language.toLowerCase();
+    if (browserLang.startsWith('ur')) return 'ur';
+    if (browserLang.startsWith('pa')) return 'pa';
+    if (browserLang.startsWith('hi')) return 'hi';
+    if (browserLang.startsWith('ar')) return 'ar';
+    if (browserLang.startsWith('ps')) return 'ps';
+    if (browserLang.startsWith('sd')) return 'sd';
+
+    return 'en';
   });
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
@@ -75,9 +86,21 @@ function App() {
     <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`} lang={language}>
       <NetworkStatus />
       <SyncStatus />
+      <FloatingLanguageSwitcher
+        currentLanguage={language}
+        onLanguageChange={handleLanguageChange}
+      />
       <div className="container mx-auto px-6 py-8 max-w-4xl">
+        {/* Language Selector - First thing visible */}
+        <nav aria-label="Language Selection" role="navigation" className="mb-8">
+          <LanguageSelector
+            currentLanguage={language}
+            onLanguageChange={handleLanguageChange}
+          />
+        </nav>
+
         {/* Admin Link */}
-        <div className="flex justify-end gap-4 mb-4 flex-wrap">
+        <div className="flex justify-end gap-4 mb-6 flex-wrap">
           <button
             onClick={() => setShowQRHistory(true)}
             className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
@@ -101,14 +124,6 @@ function App() {
             {t('valueProposition')}
           </p>
         </header>
-
-        {/* Language Selector */}
-        <nav aria-label="Language Selection" role="navigation" className="mb-10">
-          <LanguageSelector
-            currentLanguage={language}
-            onLanguageChange={handleLanguageChange}
-          />
-        </nav>
 
         {/* Main Content */}
         <main className="max-w-3xl mx-auto" role="main" aria-labelledby="main-heading">
