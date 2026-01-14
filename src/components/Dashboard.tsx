@@ -284,7 +284,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               <div className="flex gap-2 overflow-x-auto">
                 <button
                   onClick={() => setActiveView('overview')}
-                  className={`px-4 py-2.5 min-h-[48px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                  className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
                     activeView === 'overview'
                       ? 'bg-gray-900 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -294,7 +294,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 </button>
                 <button
                   onClick={() => setActiveView('donations')}
-                  className={`px-4 py-2.5 min-h-[48px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                  className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
                     activeView === 'donations'
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -304,7 +304,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                 </button>
                 <button
                   onClick={() => setActiveView('expenses')}
-                  className={`px-4 py-2.5 min-h-[48px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                  className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
                     activeView === 'expenses'
                       ? 'bg-rose-600 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -481,7 +481,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               <h3 className="text-xl font-bold text-gray-900">Log Donation</h3>
               <button
                 onClick={() => setShowDonationModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-3 min-h-[48px] min-w-[48px] hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center"
                 aria-label="Close"
               >
                 <X className="w-5 h-5 text-gray-500" />
@@ -500,7 +500,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     step="0.01"
                     value={donationForm.amount}
                     onChange={(e) => setDonationForm({ ...donationForm, amount: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="0.00"
                   />
                 </div>
@@ -513,7 +513,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     value={donationForm.donor_name}
                     onChange={(e) => setDonationForm({ ...donationForm, donor_name: e.target.value })}
                     placeholder="Anonymous"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                 </div>
                 <div>
@@ -525,7 +525,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     required
                     value={donationForm.date}
                     onChange={(e) => setDonationForm({ ...donationForm, date: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                 </div>
                 <div>
@@ -536,7 +536,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     value={donationForm.notes}
                     onChange={(e) => setDonationForm({ ...donationForm, notes: e.target.value })}
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="Optional notes..."
                   />
                 </div>
@@ -577,7 +577,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               <h3 className="text-xl font-bold text-gray-900">Log Expense</h3>
               <button
                 onClick={() => setShowExpenseModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-3 min-h-[48px] min-w-[48px] hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center"
                 aria-label="Close"
               >
                 <X className="w-5 h-5 text-gray-500" />
@@ -596,7 +596,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     step="0.01"
                     value={expenseForm.amount}
                     onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                     placeholder="0.00"
                   />
                 </div>
@@ -610,7 +610,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     value={expenseForm.purpose}
                     onChange={(e) => setExpenseForm({ ...expenseForm, purpose: e.target.value })}
                     placeholder="e.g., Electricity Bill"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                   />
                 </div>
                 <div>
@@ -622,7 +622,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     required
                     value={expenseForm.date}
                     onChange={(e) => setExpenseForm({ ...expenseForm, date: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                   />
                 </div>
                 <div>
@@ -633,7 +633,7 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
                     value={expenseForm.notes}
                     onChange={(e) => setExpenseForm({ ...expenseForm, notes: e.target.value })}
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                    className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                     placeholder="Optional notes..."
                   />
                 </div>

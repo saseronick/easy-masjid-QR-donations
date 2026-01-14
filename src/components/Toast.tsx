@@ -43,7 +43,7 @@ export default function Toast({ message, type, onClose, duration = 3000 }: Toast
       <p className="font-medium flex-1">{message}</p>
       <button
         onClick={onClose}
-        className="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors"
+        className="p-3 min-h-[48px] min-w-[48px] hover:bg-white hover:bg-opacity-20 rounded-full transition-colors flex items-center justify-center"
         aria-label="Close notification"
       >
         <X className="w-5 h-5" />

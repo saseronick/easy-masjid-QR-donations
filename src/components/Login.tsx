@@ -61,7 +61,7 @@ export default function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="admin@example.com"
             />
           </div>
@@ -75,7 +75,7 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="••••••••"
               minLength={6}
             />
@@ -101,7 +101,7 @@ export default function Login() {
                 setIsSignUp(!isSignUp);
                 setError('');
               }}
-              className="text-green-700 hover:text-green-800 text-sm font-medium py-3 px-4 min-h-[44px]"
+              className="text-green-700 hover:text-green-800 text-sm font-medium py-3 px-4 min-h-[48px] rounded-lg hover:bg-green-50 transition-colors"
             >
               {isSignUp
                 ? 'Already have an account? Sign in'

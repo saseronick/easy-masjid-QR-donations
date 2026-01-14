@@ -38,7 +38,7 @@ export default function ConfirmDialog({
           </div>
           <button
             onClick={onCancel}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
+            className="p-3 min-h-[48px] min-w-[48px] hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center"
             aria-label="Close"
           >
             <X className="w-5 h-5 text-gray-500" />

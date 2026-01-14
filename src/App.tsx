@@ -86,19 +86,19 @@ function App() {
         <div className="flex justify-end gap-4 mb-4 flex-wrap">
           <button
             onClick={() => setShowQRHistory(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 underline py-2 px-3 min-h-[44px]"
+            className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
           >
             View QR History
           </button>
           <button
             onClick={() => setShowReport(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 underline py-2 px-3 min-h-[44px]"
+            className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
           >
             Accessibility Report
           </button>
           <button
             onClick={() => setShowAdmin(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 underline py-2 px-3 min-h-[44px]"
+            className="text-sm text-gray-600 hover:text-gray-900 py-3 px-4 min-h-[48px] rounded-lg hover:bg-gray-100 transition-colors font-medium"
           >
             Admin Panel
           </button>

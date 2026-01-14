@@ -16,10 +16,10 @@ export default function AccountPrompt({ language, onSignUp, onDismiss }: Account
     <div className={`bg-gradient-to-br from-blue-50 to-green-50 border-2 border-blue-300 rounded-xl p-6 relative ${isRTL ? 'rtl' : 'ltr'}`}>
       <button
         onClick={onDismiss}
-        className="absolute top-2 right-2 p-2 min-h-[44px] min-w-[44px] text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 flex items-center justify-center"
+        className="absolute top-2 right-2 p-3 min-h-[48px] min-w-[48px] text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
         aria-label="Dismiss"
       >
-        <X className="w-6 h-6" />
+        <X className="w-5 h-5" />
       </button>
 
       <div className="flex items-start gap-4">

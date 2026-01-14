@@ -44,10 +44,10 @@ export default function QRHistory({ language, onClose }: QRHistoryProps) {
           <h2 className="text-2xl font-bold text-gray-900">Previously Generated QR Codes</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-3 min-h-[48px] min-w-[48px] hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center"
             aria-label="Close"
           >
-            <X className="w-6 h-6 text-gray-500" />
+            <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
 
