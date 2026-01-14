@@ -8,7 +8,7 @@ import Toast from './Toast';
 
 export default function NewAdminPanel() {
   const { user, signOut } = useAuth();
-  const { toast, showToast } = useToast();
+  const { toasts, showToast, hideToast } = useToast();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
@@ -139,7 +139,14 @@ export default function NewAdminPanel() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Toast {...toast} />
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => hideToast(toast.id)}
+        />
+      ))}
       <div className="container mx-auto px-6 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-8">
           <div>

@@ -13,15 +13,7 @@ export default function AccountPrompt({ language, onSignUp, onDismiss }: Account
   const isRTL = language === 'ar' || language === 'ur' || language === 'ps' || language === 'sd';
 
   return (
-    <div className={`bg-gradient-to-br from-blue-50 to-green-50 border-2 border-blue-300 rounded-xl p-6 relative ${isRTL ? 'rtl' : 'ltr'}`}>
-      <button
-        onClick={onDismiss}
-        className="absolute top-2 right-2 p-3 min-h-[48px] min-w-[48px] text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
-        aria-label="Dismiss"
-      >
-        <X className="w-5 h-5" />
-      </button>
-
+    <div className={`bg-gradient-to-br from-blue-50 to-green-50 border-2 border-blue-300 rounded-xl p-6 ${isRTL ? 'rtl' : 'ltr'}`}>
       <div className="flex items-start gap-4">
         <BookOpen className="w-12 h-12 text-blue-700 flex-shrink-0" />
         <div className="flex-1">
@@ -47,13 +39,23 @@ export default function AccountPrompt({ language, onSignUp, onDismiss }: Account
             </li>
           </ul>
 
-          <button
-            onClick={onSignUp}
-            className="w-full min-h-[56px] bg-blue-700 text-white py-3 px-6 rounded-lg text-lg font-bold hover:bg-blue-800 transition-colors shadow-md"
-          >
-            {t('createAccountButton')}
-          </button>
-          <p className="text-sm text-gray-600 mt-2 text-center">
+          <div className="flex gap-3 flex-wrap">
+            <button
+              onClick={onSignUp}
+              className="flex-1 min-w-[200px] min-h-[56px] bg-blue-700 text-white py-3 px-6 rounded-lg text-lg font-bold hover:bg-blue-800 transition-colors shadow-md"
+            >
+              {t('createAccountButton')}
+            </button>
+            <button
+              onClick={onDismiss}
+              className="min-h-[56px] px-6 py-3 bg-gray-200 text-gray-800 rounded-lg text-lg font-bold hover:bg-gray-300 transition-colors border-2 border-gray-400 flex items-center gap-2"
+              aria-label="Skip account creation"
+            >
+              <X className="w-5 h-5" aria-hidden="true" />
+              <span>No Thanks</span>
+            </button>
+          </div>
+          <p className="text-sm text-gray-600 mt-3 text-center">
             {t('accountOptional')}
           </p>
         </div>
