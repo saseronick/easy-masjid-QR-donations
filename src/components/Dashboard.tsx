@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase, Organization, Donation, Expense } from '../lib/supabase';
 import { Plus, Download, X, TrendingUp, TrendingDown, Wallet, Receipt, ArrowLeft } from 'lucide-react';
+import { DashboardSkeleton } from './LoadingSkeleton';
 
 interface DashboardProps {
   organization: Organization;
@@ -11,6 +12,7 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [activeView, setActiveView] = useState<'overview' | 'donations' | 'expenses'>('overview');
@@ -62,6 +64,7 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
 
   const handleAddDonation = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
       const { error } = await supabase.from('donations').insert({
         organization_id: organization.id,
@@ -87,11 +90,14 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
     } catch (error) {
       console.error('Error adding donation:', error);
       alert('Error adding donation');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleAddExpense = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
       const { error } = await supabase.from('expenses').insert({
         organization_id: organization.id,
@@ -115,6 +121,8 @@ export default function Dashboard({ organization, onBack }: DashboardProps) {
     } catch (error) {
       console.error('Error adding expense:', error);
       alert('Error adding expense');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -150,8 +158,20 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-xl text-gray-600">Loading...</div>
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
+          <div className="mb-6">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 py-2 px-3 min-h-[48px] min-w-[48px] rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Back to Organizations"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="hidden sm:inline">Back</span>
+            </button>
+          </div>
+          <DashboardSkeleton />
+        </div>
       </div>
     );
   }
@@ -476,14 +496,23 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               <div className="flex gap-3 mt-6">
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 min-h-[48px] bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium"
+                  disabled={submitting}
+                  className="flex-1 px-6 py-3 min-h-[48px] bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Add Donation
+                  {submitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Adding...</span>
+                    </>
+                  ) : (
+                    'Add Donation'
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowDonationModal(false)}
-                  className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium"
+                  disabled={submitting}
+                  className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -564,14 +593,23 @@ ${expenses.map(e => `${e.date} - Rs. ${parseFloat(e.amount.toString()).toLocaleS
               <div className="flex gap-3 mt-6">
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 min-h-[48px] bg-rose-600 text-white rounded-lg hover:bg-rose-700 font-medium"
+                  disabled={submitting}
+                  className="flex-1 px-6 py-3 min-h-[48px] bg-rose-600 text-white rounded-lg hover:bg-rose-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Add Expense
+                  {submitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Adding...</span>
+                    </>
+                  ) : (
+                    'Add Expense'
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowExpenseModal(false)}
-                  className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium"
+                  disabled={submitting}
+                  className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium disabled:opacity-50"
                 >
                   Cancel
                 </button>

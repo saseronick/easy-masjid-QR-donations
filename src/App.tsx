@@ -5,13 +5,17 @@ import PaymentForm from './components/PaymentForm';
 import QRDisplay from './components/QRDisplay';
 import Login from './components/Login';
 import NewAdminPanel from './components/NewAdminPanel';
+import NetworkStatus from './components/NetworkStatus';
 import { AccessibilityReport } from './components/AccessibilityReport';
 import { Language, PaymentInfo } from './types';
 import { translations } from './data/translations';
 
 function App() {
   const { user, loading } = useAuth();
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem('preferredLanguage');
+    return (saved as Language) || 'en';
+  });
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -31,6 +35,11 @@ function App() {
   const handleSignUp = () => {
     setShowSignUp(true);
     setShowAdmin(true);
+  };
+
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+    localStorage.setItem('preferredLanguage', lang);
   };
 
   if (loading) {
@@ -54,6 +63,7 @@ function App() {
 
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? 'rtl' : 'ltr'}`} lang={language}>
+      <NetworkStatus />
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {/* Admin Link */}
         <div className="flex justify-end gap-4 mb-4">
@@ -85,7 +95,7 @@ function App() {
         <nav aria-label="Language Selection" role="navigation" className="mb-10">
           <LanguageSelector
             currentLanguage={language}
-            onLanguageChange={setLanguage}
+            onLanguageChange={handleLanguageChange}
           />
         </nav>
 

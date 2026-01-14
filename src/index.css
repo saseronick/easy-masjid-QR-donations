@@ -125,6 +125,22 @@ button, .touch-target {
   transition-duration: 150ms;
 }
 
+/* Toast animation */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
 @media print {
   @page {
     margin: 0.5in;

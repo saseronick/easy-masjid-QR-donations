@@ -39,6 +39,17 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
     const generateQRs = async () => {
       try {
         const paymentUrl = generatePaymentUrl();
+        const cacheKey = `qr-${paymentInfo.method}-${paymentInfo.identifier}`;
+
+        const cachedQR = localStorage.getItem(cacheKey);
+        if (cachedQR) {
+          setQrDataUrl(cachedQR);
+          const cachedPrint = localStorage.getItem(`${cacheKey}-print`);
+          if (cachedPrint) {
+            setQrPrintDataUrl(cachedPrint);
+            return;
+          }
+        }
 
         const dataUrl = await QRCode.toDataURL(paymentUrl, {
           width: 350,
@@ -49,8 +60,9 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
           }
         });
         setQrDataUrl(dataUrl);
+        localStorage.setItem(cacheKey, dataUrl);
 
-        await generatePrintQR(paymentUrl);
+        await generatePrintQR(paymentUrl, cacheKey);
       } catch (error) {
         console.error('Error generating QR code:', error);
       }
@@ -59,7 +71,7 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
     generateQRs();
   }, [paymentInfo]);
 
-  const generatePrintQR = async (paymentUrl: string) => {
+  const generatePrintQR = async (paymentUrl: string, cacheKey?: string) => {
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
@@ -130,6 +142,10 @@ export default function QRDisplay({ paymentInfo, language, onBack, onSignUp }: Q
 
       const dataUrl = canvas.toDataURL('image/png');
       setQrPrintDataUrl(dataUrl);
+
+      if (cacheKey) {
+        localStorage.setItem(`${cacheKey}-print`, dataUrl);
+      }
 
     } catch (error) {
       console.error('Error generating print QR:', error);
