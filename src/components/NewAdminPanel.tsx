@@ -33,8 +33,8 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
   }, []);
 
   const validateName = (name: string): string => {
-    if (!name.trim()) return 'Mosque name is required';
-    if (name.trim().length < 3) return 'Mosque name must be at least 3 characters';
+    if (!name.trim()) return 'Masjid name is required';
+    if (name.trim().length < 3) return 'Masjid name must be at least 3 characters';
     return '';
   };
 
@@ -117,7 +117,7 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
 
       if (error) throw error;
 
-      showToast('Mosque created successfully!', 'success');
+      showToast('Masjid created successfully!', 'success');
       setShowForm(false);
       setFormData({
         name: '',
@@ -174,14 +174,14 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
           <span>Back to Donation Page</span>
         </button>
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Mosque Management</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Masjid Management</h1>
             <p className="text-gray-600 mt-1">{user?.email}</p>
           </div>
           <button
             onClick={signOut}
-            className="flex items-center gap-2 px-4 py-3 min-h-[50px] bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-3 min-h-[50px] bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto"
           >
             <LogOut className="w-5 h-5" />
             Sign Out
@@ -191,21 +191,21 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="mb-6 flex items-center gap-2 px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+            className="mb-6 flex items-center justify-center gap-2 px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium w-full sm:w-auto"
           >
             <Plus className="w-5 h-5" />
-            Add Mosque
+            Add Masjid
           </button>
         )}
 
         {showForm && (
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200">
-            <h2 className="text-2xl font-bold mb-6 text-gray-900">New Mosque</h2>
+          <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 mb-8 border border-gray-200">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">New Masjid</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Mosque Name */}
+              {/* Masjid Name */}
               <div>
                 <label htmlFor="mosque-name" className="block text-xl font-bold text-gray-900 mb-3">
-                  Mosque Name *
+                  Masjid Name *
                 </label>
                 <input
                   id="mosque-name"
@@ -261,7 +261,7 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
                   aria-invalid={!!contactPhoneError}
                 />
                 <p id="contact-help" className="text-sm text-gray-600 mt-2">
-                  Your main contact number for mosque administration
+                  Your main contact number for masjid administration
                 </p>
                 {contactPhoneError && (
                   <div id="contact-error" className="mt-3 bg-red-50 border-2 border-red-300 rounded-lg p-3 flex items-start gap-2" role="alert">
@@ -316,12 +316,12 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
                 )}
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <button
                   type="submit"
-                  className="px-8 py-4 min-h-[56px] bg-green-700 text-white rounded-xl text-lg hover:bg-green-800 transition-colors font-bold shadow-md"
+                  className="px-8 py-4 min-h-[56px] bg-green-700 text-white rounded-xl text-lg hover:bg-green-800 transition-colors font-bold shadow-md w-full sm:w-auto"
                 >
-                  Create Mosque
+                  Create Masjid
                 </button>
                 <button
                   type="button"
@@ -338,7 +338,7 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
                       raast_phone_number: false,
                     });
                   }}
-                  className="px-8 py-4 min-h-[56px] bg-gray-200 text-gray-800 rounded-xl text-lg hover:bg-gray-300 transition-colors font-bold"
+                  className="px-8 py-4 min-h-[56px] bg-gray-200 text-gray-800 rounded-xl text-lg hover:bg-gray-300 transition-colors font-bold w-full sm:w-auto"
                 >
                   Cancel
                 </button>
@@ -350,10 +350,10 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
         <div className="grid grid-cols-1 gap-6">
           {organizations.map((org) => (
             <div key={org.id} className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">{org.name}</h3>
-                  <p className="text-gray-600 mt-1">{org.contact_phone}</p>
+              <div className="flex flex-col gap-4">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{org.name}</h3>
+                  <p className="text-gray-600">{org.contact_phone}</p>
                   {org.raast_phone_number && (
                     <p className="text-sm text-gray-500 mt-1">
                       RAAST: {org.raast_phone_number}
@@ -362,7 +362,7 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
                 </div>
                 <button
                   onClick={() => setSelectedOrg(org)}
-                  className="flex items-center gap-2 px-4 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors w-full sm:w-auto sm:self-start"
                 >
                   <Eye className="w-4 h-4" />
                   View Dashboard
@@ -373,14 +373,14 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
         </div>
 
         {organizations.length === 0 && !showForm && (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-600 text-lg mb-4">No mosques registered yet</p>
+          <div className="bg-white rounded-lg shadow-md p-8 sm:p-12 text-center">
+            <p className="text-gray-600 text-lg mb-4">No masjids registered yet</p>
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[50px] bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium w-full sm:w-auto"
             >
               <Plus className="w-5 h-5" />
-              Add Your First Mosque
+              Add Your First Masjid
             </button>
           </div>
         )}

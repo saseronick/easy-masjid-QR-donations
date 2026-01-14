@@ -269,10 +269,10 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
                 <button
                   onClick={onBackToMosques}
                   className="flex items-center gap-2 text-green-700 hover:text-green-900 py-2 px-3 min-h-[48px] min-w-[48px] rounded-lg hover:bg-green-50 transition-colors border-2 border-green-700"
-                  aria-label="Back to Mosque Management"
+                  aria-label="Back to Masjid Management"
                 >
                   <Building2 className="w-5 h-5" />
-                  <span>Mosque Management</span>
+                  <span>Masjid Management</span>
                 </button>
               )}
             </div>
@@ -302,10 +302,10 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
               <button
                 onClick={onBackToMosques}
                 className="flex items-center gap-2 text-green-700 hover:text-green-900 py-2 px-3 min-h-[48px] min-w-[48px] rounded-lg hover:bg-green-50 transition-colors border-2 border-green-700"
-                aria-label="Back to Mosque Management"
+                aria-label="Back to Masjid Management"
               >
                 <Building2 className="w-5 h-5" />
-                <span>Mosque Management</span>
+                <span>Masjid Management</span>
               </button>
             )}
           </div>
