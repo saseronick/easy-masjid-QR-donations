@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { UserCircle, History } from 'lucide-react';
 import { useAuth } from './contexts/AuthContext';
 import LanguageSelector from './components/LanguageSelector';
 import FloatingLanguageSwitcher from './components/FloatingLanguageSwitcher';
@@ -91,39 +92,47 @@ function App() {
         onLanguageChange={handleLanguageChange}
       />
       <div className="container mx-auto px-6 py-8 max-w-4xl">
-        {/* Header - First thing visible */}
-        <header className="text-center mb-8" role="banner">
-          <h1 className="text-4xl md:text-5xl font-bold text-green-900 mb-3 leading-tight" id="main-heading">
-            {t('title')}
-          </h1>
-          <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-6">
-            {t('valueProposition')}
-          </p>
-        </header>
-
-        {/* Language Selector */}
-        <nav aria-label="Language Selection" role="navigation" className="mb-8">
+        {/* Language Selector - First on page */}
+        <nav aria-label="Language Selection" role="navigation" className="mb-6">
           <LanguageSelector
             currentLanguage={language}
             onLanguageChange={handleLanguageChange}
           />
         </nav>
 
-        {/* Admin Links - More prominent */}
-        <div className="flex justify-center gap-3 mb-8 flex-wrap">
-          <button
-            onClick={() => setShowQRHistory(true)}
-            className="text-base text-gray-700 hover:text-green-900 py-3 px-5 min-h-[48px] rounded-lg border-2 border-gray-300 hover:border-green-700 bg-white hover:bg-green-50 transition-all font-semibold shadow-sm"
-          >
-            📋 View QR History
-          </button>
-          <button
-            onClick={() => setShowAdmin(true)}
-            className="text-base text-gray-700 hover:text-green-900 py-3 px-5 min-h-[48px] rounded-lg border-2 border-gray-300 hover:border-green-700 bg-white hover:bg-green-50 transition-all font-semibold shadow-sm"
-          >
-            🔐 Admin Panel
-          </button>
-        </div>
+        {/* Header with Account Access */}
+        <header className="mb-8" role="banner">
+          <div className="flex justify-between items-start mb-6">
+            <div className="flex-1"></div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowQRHistory(true)}
+                className="inline-flex items-center gap-2 text-sm text-gray-700 hover:text-green-900 py-2 px-4 min-h-[48px] min-w-[48px] rounded-lg border-2 border-gray-300 hover:border-green-700 bg-white hover:bg-green-50 transition-all font-medium shadow-sm focus:outline-none focus:ring-4 focus:ring-green-300"
+                aria-label="View QR History"
+              >
+                <History size={20} aria-hidden="true" />
+                <span className="hidden sm:inline">History</span>
+              </button>
+              <button
+                onClick={() => setShowAdmin(true)}
+                className="inline-flex items-center gap-2 text-sm bg-green-700 hover:bg-green-800 text-white py-2 px-5 min-h-[48px] rounded-lg border-2 border-green-700 hover:border-green-800 transition-all font-semibold shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300"
+                aria-label="My Account"
+              >
+                <UserCircle size={20} aria-hidden="true" />
+                <span>My Account</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-green-900 mb-3 leading-tight" id="main-heading">
+              {t('title')}
+            </h1>
+            <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-6">
+              {t('valueProposition')}
+            </p>
+          </div>
+        </header>
 
         {/* Main Content */}
         <main className="max-w-3xl mx-auto" role="main" aria-labelledby="main-heading">
