@@ -760,6 +760,9 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
                     onChange={(e) => setDonationForm({ ...donationForm, date: e.target.value })}
                     className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Format: YYYY-MM-DD (e.g., 2026-01-14)
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -927,6 +930,9 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
                     onChange={(e) => setExpenseForm({ ...expenseForm, date: e.target.value })}
                     className="w-full px-4 py-3 min-h-[48px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Format: YYYY-MM-DD (e.g., 2026-01-14)
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
