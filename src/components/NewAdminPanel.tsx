@@ -5,6 +5,7 @@ import { LogOut, Plus, Eye, CheckCircle, XCircle, ArrowLeft, Building2 } from 'l
 import Dashboard from './Dashboard';
 import { useToast } from '../hooks/useToast';
 import Toast from './Toast';
+import ConfirmDialog from './ConfirmDialog';
 
 interface NewAdminPanelProps {
   onBackToDonations: () => void;
@@ -27,6 +28,7 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
     contact_phone: false,
     raast_phone_number: false,
   });
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   useEffect(() => {
     loadOrganizations();
@@ -326,17 +328,12 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
                 <button
                   type="button"
                   onClick={() => {
-                    setShowForm(false);
-                    setFormData({
-                      name: '',
-                      contact_phone: '',
-                      raast_phone_number: '',
-                    });
-                    setTouched({
-                      name: false,
-                      contact_phone: false,
-                      raast_phone_number: false,
-                    });
+                    const hasData = formData.name || formData.contact_phone || formData.raast_phone_number;
+                    if (hasData) {
+                      setShowCancelConfirm(true);
+                    } else {
+                      setShowForm(false);
+                    }
                   }}
                   className="px-8 py-4 min-h-[56px] bg-gray-200 text-gray-800 rounded-xl text-lg hover:bg-gray-300 transition-colors font-bold w-full sm:w-auto"
                 >
@@ -385,6 +382,31 @@ export default function NewAdminPanel({ onBackToDonations }: NewAdminPanelProps)
           </div>
         )}
       </div>
+
+      {showCancelConfirm && (
+        <ConfirmDialog
+          title="Discard Changes?"
+          message="You have unsaved changes. Are you sure you want to cancel? Your changes will be lost."
+          confirmText="Discard"
+          cancelText="Keep Editing"
+          type="warning"
+          onConfirm={() => {
+            setShowForm(false);
+            setFormData({
+              name: '',
+              contact_phone: '',
+              raast_phone_number: '',
+            });
+            setTouched({
+              name: false,
+              contact_phone: false,
+              raast_phone_number: false,
+            });
+            setShowCancelConfirm(false);
+          }}
+          onCancel={() => setShowCancelConfirm(false)}
+        />
+      )}
     </div>
   );
 }

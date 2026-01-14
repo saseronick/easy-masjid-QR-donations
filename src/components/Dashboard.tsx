@@ -6,6 +6,7 @@ import { offlineStorage } from '../services/offlineStorage';
 import { syncQueue } from '../services/syncQueue';
 import { DBDonation, DBExpense } from '../utils/db';
 import { formatCurrency } from '../utils/formatters';
+import ConfirmDialog from './ConfirmDialog';
 
 interface DashboardProps {
   organization: Organization;
@@ -42,6 +43,8 @@ export default function Dashboard({ organization, onBack, onBackToMosques }: Das
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successType, setSuccessType] = useState<'donation' | 'expense'>('donation');
   const [successAmount, setSuccessAmount] = useState('');
+  const [showDonationCancelConfirm, setShowDonationCancelConfirm] = useState(false);
+  const [showExpenseCancelConfirm, setShowExpenseCancelConfirm] = useState(false);
 
   const validateAmount = (amount: string): string => {
     if (!amount.trim()) {
@@ -227,19 +230,19 @@ export default function Dashboard({ organization, onBack, onBackToMosques }: Das
 
   const exportReport = () => {
     const reportText = `
-${organization.name} - Financial Report
-Generated: ${new Date().toLocaleDateString()}
+*${organization.name}*
+_Financial Report - ${new Date().toLocaleDateString()}_
 
-SUMMARY
-Total Donations: ${formatCurrency(totalDonations)}
-Total Expenses: ${formatCurrency(totalExpenses)}
-Balance: ${formatCurrency(balance)}
+*SUMMARY*
+Total Donations: *${formatCurrency(totalDonations)}*
+Total Expenses: *${formatCurrency(totalExpenses)}*
+Balance: *${formatCurrency(balance)}*
 
-DONATIONS
-${donations.map(d => `${d.date} - ${formatCurrency(d.amount)} - ${d.donor_name || 'Anonymous'}${d.notes ? ` (${d.notes})` : ''}`).join('\n')}
+*DONATIONS (${donations.length})*
+${donations.length > 0 ? donations.map(d => `${d.date} - ${formatCurrency(d.amount)}\n   ${d.donor_name || 'Anonymous'}${d.notes ? `\n   _${d.notes}_` : ''}`).join('\n\n') : 'No donations yet'}
 
-EXPENSES
-${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.notes ? ` (${e.notes})` : ''}`).join('\n')}
+*EXPENSES (${expenses.length})*
+${expenses.length > 0 ? expenses.map(e => `${e.date} - ${formatCurrency(e.amount)}\n   ${e.purpose}${e.notes ? `\n   _${e.notes}_` : ''}`).join('\n\n') : 'No expenses yet'}
     `.trim();
 
     const blob = new Blob([reportText], { type: 'text/plain' });
@@ -503,46 +506,111 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
 
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="border-b border-gray-200 bg-gray-50 px-4 sm:px-6 py-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex gap-2 overflow-x-auto">
+            <div className="flex flex-col gap-4">
+              {/* Mobile: Vertical Card List */}
+              <div className="flex flex-col gap-2 sm:hidden">
                 <button
                   onClick={() => setActiveView('overview')}
-                  className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                  className={`flex items-center justify-between px-4 py-4 min-h-[56px] rounded-lg font-medium transition-colors ${
                     activeView === 'overview'
-                      ? 'bg-gray-900 text-white'
+                      ? 'bg-gray-900 text-white shadow-md'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                   }`}
                 >
-                  Overview
+                  <span className="flex items-center gap-3">
+                    <Wallet className="w-5 h-5" />
+                    Overview
+                  </span>
+                  {activeView === 'overview' && <CheckCircle className="w-5 h-5" />}
                 </button>
                 <button
                   onClick={() => setActiveView('donations')}
-                  className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                  className={`flex items-center justify-between px-4 py-4 min-h-[56px] rounded-lg font-medium transition-colors ${
                     activeView === 'donations'
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-emerald-600 text-white shadow-md'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                   }`}
                 >
-                  Donations ({donations.length})
+                  <span className="flex items-center gap-3">
+                    <TrendingUp className="w-5 h-5" />
+                    Donations
+                  </span>
+                  <span className={`px-2 py-1 rounded-full text-sm ${
+                    activeView === 'donations' ? 'bg-emerald-700' : 'bg-gray-200 text-gray-700'
+                  }`}>
+                    {donations.length}
+                  </span>
                 </button>
                 <button
                   onClick={() => setActiveView('expenses')}
-                  className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                  className={`flex items-center justify-between px-4 py-4 min-h-[56px] rounded-lg font-medium transition-colors ${
                     activeView === 'expenses'
-                      ? 'bg-rose-600 text-white'
+                      ? 'bg-rose-600 text-white shadow-md'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                   }`}
                 >
-                  Expenses ({expenses.length})
+                  <span className="flex items-center gap-3">
+                    <Receipt className="w-5 h-5" />
+                    Expenses
+                  </span>
+                  <span className={`px-2 py-1 rounded-full text-sm ${
+                    activeView === 'expenses' ? 'bg-rose-700' : 'bg-gray-200 text-gray-700'
+                  }`}>
+                    {expenses.length}
+                  </span>
                 </button>
               </div>
+
+              {/* Desktop: Horizontal Tabs */}
+              <div className="hidden sm:flex sm:items-center sm:justify-between gap-4">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setActiveView('overview')}
+                    className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                      activeView === 'overview'
+                        ? 'bg-gray-900 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                    }`}
+                  >
+                    Overview
+                  </button>
+                  <button
+                    onClick={() => setActiveView('donations')}
+                    className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                      activeView === 'donations'
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                    }`}
+                  >
+                    Donations ({donations.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveView('expenses')}
+                    className={`px-6 py-4 min-h-[56px] rounded-lg font-medium transition-colors whitespace-nowrap ${
+                      activeView === 'expenses'
+                        ? 'bg-rose-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                    }`}
+                  >
+                    Expenses ({expenses.length})
+                  </button>
+                </div>
+                <button
+                  onClick={exportReport}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 min-h-[48px] bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+                >
+                  <Download className="w-5 h-5" />
+                  Export Report
+                </button>
+              </div>
+
+              {/* Mobile: Export Button */}
               <button
                 onClick={exportReport}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 min-h-[48px] bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+                className="sm:hidden flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
                 <Download className="w-5 h-5" />
-                <span className="hidden sm:inline">Export Report</span>
-                <span className="sm:hidden">Export</span>
+                Export Report
               </button>
             </div>
           </div>
@@ -819,7 +887,15 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowDonationModal(false)}
+                  onClick={() => {
+                    const hasData = donationForm.amount || donationForm.donor_name || donationForm.notes ||
+                                   donationForm.date !== new Date().toISOString().split('T')[0];
+                    if (hasData) {
+                      setShowDonationCancelConfirm(true);
+                    } else {
+                      setShowDonationModal(false);
+                    }
+                  }}
                   disabled={submitting}
                   className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium disabled:opacity-50"
                 >
@@ -989,7 +1065,15 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowExpenseModal(false)}
+                  onClick={() => {
+                    const hasData = expenseForm.amount || expenseForm.purpose || expenseForm.notes ||
+                                   expenseForm.date !== new Date().toISOString().split('T')[0];
+                    if (hasData) {
+                      setShowExpenseCancelConfirm(true);
+                    } else {
+                      setShowExpenseModal(false);
+                    }
+                  }}
                   disabled={submitting}
                   className="px-6 py-3 min-h-[48px] bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium disabled:opacity-50"
                 >
@@ -999,6 +1083,51 @@ ${expenses.map(e => `${e.date} - ${formatCurrency(e.amount)} - ${e.purpose}${e.n
             </form>
           </div>
         </div>
+      )}
+
+      {showDonationCancelConfirm && (
+        <ConfirmDialog
+          title="Discard Donation?"
+          message="You have unsaved changes. Are you sure you want to cancel? Your changes will be lost."
+          confirmText="Discard"
+          cancelText="Keep Editing"
+          type="warning"
+          onConfirm={() => {
+            setShowDonationModal(false);
+            setDonationForm({
+              amount: '',
+              donor_name: '',
+              notes: '',
+              date: new Date().toISOString().split('T')[0],
+            });
+            setDonationAmountError('');
+            setShowDonationCancelConfirm(false);
+          }}
+          onCancel={() => setShowDonationCancelConfirm(false)}
+        />
+      )}
+
+      {showExpenseCancelConfirm && (
+        <ConfirmDialog
+          title="Discard Expense?"
+          message="You have unsaved changes. Are you sure you want to cancel? Your changes will be lost."
+          confirmText="Discard"
+          cancelText="Keep Editing"
+          type="warning"
+          onConfirm={() => {
+            setShowExpenseModal(false);
+            setExpenseForm({
+              amount: '',
+              purpose: '',
+              notes: '',
+              date: new Date().toISOString().split('T')[0],
+            });
+            setExpenseAmountError('');
+            setExpensePurposeError('');
+            setShowExpenseCancelConfirm(false);
+          }}
+          onCancel={() => setShowExpenseCancelConfirm(false)}
+        />
       )}
     </div>
   );
