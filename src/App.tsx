@@ -66,7 +66,7 @@ function App() {
 
   if (showAdmin) {
     if (!user) {
-      return <Login />;
+      return <Login onCancel={() => setShowAdmin(false)} />;
     }
     return <NewAdminPanel />;
   }
